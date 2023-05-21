@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to Antenna Optimization Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .data-container {
+            margin-top: 40px;
+<!--            display: none;-->
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .visualization {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Antenna Optimization Tool</h1>
+    <div class="container">
+        <div class="form-group">
+            <form action="{{ url_for('hello_world') }}" method="post">
+                <label for="model-number">Select Antenna Model Number:</label>
+                <select id="model-number" name="model_number">
+                    <option value="" disabled selected>Select a model number</option>
+                    <option value="MS-MBA-3.2-H4-L4">MS-MBA-3.2-H4-L4</option>
+                    <option value="MS-4.2DB60-B">MS-4.2DB60-B</option>
+                    <option value="MS-6.3DB90-A">MS-6.3DB90-A</option>
+                    <!-- Add more options for other models -->
+                </select>
+                <button class="btn" type="submit">Show Data</button>
+            </form>
+        </div>
+        {% if Data %}
+        <div class="data-container">
+            <h2>Data for Antenna Model: {{ test["model_number"] }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>High Band Beams</th>
+                        <th>Azimuth</th>
+                    </tr>
+                </thead>
+                <tbody id="antenna-data">
+                {% for i in range(1, high_beam + 1) %}
+                    <tr>
+                        <td>HB Beam {{ i }}</td>
+                        <td>{{ test["high_band_azimuth_" ~ i] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Low Band Beams</th>
+                        <th>Azimuth</th>
+                    </tr>
+                </thead>
+                <tbody id="antenna-data">
+                {% for i in range(1, low_beam + 1) %}
+                    <tr>
+                        <td>LB Beam {{ i }}</td>
+                        <td>{{ test["low_band_azimuth_" ~ i] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        {% endif %}
+    </div>
+</body>
+<!--    <script>-->
+<!--    function showData() {-->
+<!--        var selectedModel = document.getElementById("model-number").value;-->
+
+<!--        fetch("/data", {-->
+<!--            method: "POST",-->
+<!--            headers: {-->
+<!--                "Content-Type": "application/json"-->
+<!--            },-->
+<!--            body: JSON.stringify({ model: selectedModel })-->
+<!--        })-->
+<!--        .then(response => response.json())-->
+<!--        .then(data => {-->
+<!--            if (data.success) {-->
+<!--                var antennaData = data.antenna;-->
+<!--                var dataContainer = document.querySelector(".data-container");-->
+
+<!--                if (dataContainer) {-->
+<!--                    if (antennaData.length === 0) {-->
+<!--                        dataContainer.innerHTML = "<p>No antenna data available.</p>";-->
+<!--                    } else {-->
+<!--                        var table = document.createElement("table");-->
+<!--                        var thead = document.createElement("thead");-->
+<!--                        var tbody = document.createElement("tbody");-->
+
+<!--                        // Create table headers-->
+<!--                        var headers = ["High Band Beams", "Angle Offset", "Azimuth"];-->
+<!--                        var headerRow = document.createElement("tr");-->
+
+<!--                        headers.forEach(function(headerText) {-->
+<!--                            var th = document.createElement("th");-->
+<!--                            th.textContent = headerText;-->
+<!--                            headerRow.appendChild(th);-->
+<!--                        });-->
+
+<!--                        thead.appendChild(headerRow);-->
+<!--                        table.appendChild(thead);-->
+
+<!--                        // Create table rows-->
+<!--                        antennaData.forEach(function(item) {-->
+<!--                            var row = document.createElement("tr");-->
+
+<!--                            Object.values(item).forEach(function(value) {-->
+<!--                                var cell = document.createElement("td");-->
+<!--                                cell.textContent = value;-->
+<!--                                row.appendChild(cell);-->
+<!--                            });-->
+
+<!--                            tbody.appendChild(row);-->
+<!--                        });-->
+
+<!--                        table.appendChild(tbody);-->
+<!--                        dataContainer.innerHTML = ""; // Clear previous data-->
+<!--                        dataContainer.appendChild(table);-->
+<!--                    }-->
+
+<!--                    dataContainer.style.display = "block"; // Display the data container-->
+<!--                } else {-->
+<!--                    console.error("Data container element not found.");-->
+<!--                }-->
+<!--            } else {-->
+<!--                console.error(data.message);-->
+<!--            }-->
+<!--        })-->
+<!--        .catch(error => {-->
+<!--            console.error(error);-->
+<!--        });-->
+<!--    }-->
+</script>
+</html>
