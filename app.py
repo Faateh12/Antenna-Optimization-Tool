@@ -34,6 +34,10 @@ class AntennaInfo(db.Model):
     low_band_azimuth_6 = db.Column(db.Float(precision=53))
     high_band_tilt_range = db.Column(db.String(50))
     low_band_tilt_range = db.Column(db.String(50))
+    hor_beam_3db_high = db.Column(db.String(50))
+    ver_beam_3db_high = db.Column(db.String(50))
+    hor_beam_3db_low = db.Column(db.String(50))
+    ver_beam_3db_low = db.Column(db.String(50))
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
@@ -48,10 +52,34 @@ def hello_world():
             print(key, value)
         high_beam_Count = test['high_beam_count']
         low_beam_Count = test['low_beam_count']
+        ver_beam_high = test['ver_beam_3db_high']
+        ver_beam_low = test['ver_beam_3db_low']
+        hor_beam_high = test['hor_beam_3db_high']
+        hor_beam_low = test['hor_beam_3db_low']
+        high_tilt = test['high_band_tilt_range']
+        low_tilt = test['low_band_tilt_range']
+        elements = high_tilt.split(" to ")
+        from_high_band_range = int(elements[0])
+        to_high_band_range = int(elements[1])
+        elements2 = low_tilt.split(" to ")
+        from_low_band_range = int(elements2[0])
+        to_low_band_range = int(elements2[1])
         print(high_beam_Count, low_beam_Count)
+        print(from_low_band_range, to_low_band_range)
         Data = True
-        return render_template('home.html', antenna=antenna, Data=Data, test=test, high_beam=int(high_beam_Count), low_beam=int(low_beam_Count))
+        return render_template('home.html', antenna=antenna, Data=Data, test=test, high_beam=int(high_beam_Count), low_beam=int(low_beam_Count),
+                               ver_beam_high=ver_beam_high, ver_beam_low=ver_beam_low, hor_beam_low=hor_beam_low, hor_beam_high=hor_beam_high,
+                               from_high_band=from_high_band_range, to_high_band=to_high_band_range,
+                               from_low_band=from_low_band_range, to_low_band=to_low_band_range)
     return render_template("home.html")
+
+# with app.app_context():
+#     # Create the tables
+#     db.create_all()
+
+# @app.route('/calculate', methods=['GET', 'POST'])
+# def hello_world():
+#     pass
 
 
 
