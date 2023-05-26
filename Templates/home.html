@@ -37,7 +37,7 @@
         </div>
         {% if Data %}
         <div style="margin-left: 15px; margin-right: 15px;" class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h6 style="text-align: center;">{{ test["model_number"] }}</h6>
@@ -135,10 +135,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <img src="static/images/real-beamtilt.jpg" alt="Visual">
+                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
                     </div>
                 </div>
             </div>
@@ -185,7 +185,7 @@
       var image = new Image();
 
       // Set the image source
-      image.src = "static/images/real-beamtilt.jpg";
+      var imageUrl = "static/images/real-beamtilt.jpg";
 
       // When the image is loaded
       image.onload = function() {
@@ -197,12 +197,136 @@
         canvas.width = image.width;
         canvas.height = image.height;
 
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
         // Draw the image on the canvas
         context.drawImage(image, 0, 0);
 
         // Set the text style
         context.font = "20px Arial";
         context.fillStyle = "black";
+
+        var bandType = "(High Band)";
+        context.fillText(bandType, 100, 200);
+
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+
+        var upper3db = `${miles_upperdb} miles`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} miles`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb}`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb}`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe}`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+
+        // Replace the existing image with the modified image
+        var existingImage = document.querySelector(".col-md-4 img");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
+    function calculateDistanceLowBand() {
+      var H = parseInt(document.getElementById('acl-input-lowband').value);
+      var aSelect = document.getElementById('tilt-select-lowband');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_low }}; // Assuming you have a value for ver_beam_high
+
+      var H_miles = H / 5280;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = (H_miles / Math.tan((B / 2 + a))).toFixed(3);
+      var km_lowerdb = (H_km / Math.tan((B / 2 + a))).toFixed(3);
+
+      var miles_upperdb = (H_miles / Math.tan((a - B / 2))).toFixed(3);
+      var km_upperdb = (H_km / Math.tan((a - B / 2))).toFixed(3);
+
+      var miles_mainlobe = (H_miles / Math.tan((a))).toFixed(3);
+      var km_mainlobe = (H_km / Math.tan((a))).toFixed(3);
+
+      var horizon = Math.sqrt(2 * H);
+      console.log(horizon);
+
+      document.getElementById('lower-3db-lowband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
+      document.getElementById('upper-3db-lowband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
+      document.getElementById('main-lobe-lowband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+
+        // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(Low Band)";
+        context.fillText(bandType, 100, 200);
 
         // Define the text content and position
         var height = `${H} feet`;
@@ -254,41 +378,13 @@
         context.fillText(horizon, 320, 804);
 
         // Modify the existing image with the modified canvas
-        image.src = canvas.toDataURL();
+        var newImageSrc = canvas.toDataURL();
 
         // Replace the existing image with the modified image
-        var existingImage = document.querySelector(".col-md-5 img");
-        existingImage.src = image.src;
+        var existingImage = document.querySelector(".col-md-4 img");
+        existingImage.src = newImageSrc;
       };
-    }
-
-    function calculateDistanceLowBand() {
-      var H = parseInt(document.getElementById('acl-input-lowband').value);
-      var aSelect = document.getElementById('tilt-select-lowband');
-      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
-      var BDegrees = {{ ver_beam_low }}; // Assuming you have a value for ver_beam_high
-
-      var H_miles = H / 5280;
-      var H_km = H * 0.3048 / 1000;
-
-      var a = aDegrees * Math.PI / 180;
-      var B = BDegrees * Math.PI / 180;
-
-      var miles_lowerdb = (H_miles / Math.tan((B / 2 + a))).toFixed(3);
-      var km_lowerdb = (H_km / Math.tan((B / 2 + a))).toFixed(3);
-
-      var miles_upperdb = (H_miles / Math.tan((a - B / 2))).toFixed(3);
-      var km_upperdb = (H_km / Math.tan((a - B / 2))).toFixed(3);
-
-      var miles_mainlobe = (H_miles / Math.tan((a))).toFixed(3);
-      var km_mainlobe = (H_km / Math.tan((a))).toFixed(3);
-
-      var result = Math.sqrt(2 * H);
-      console.log(result);
-
-      document.getElementById('lower-3db-lowband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
-      document.getElementById('upper-3db-lowband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
-      document.getElementById('main-lobe-lowband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+    image.src = imageUrl;
     }
 
 
