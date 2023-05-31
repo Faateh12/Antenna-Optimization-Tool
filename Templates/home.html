@@ -3,7 +3,13 @@
 <head>
     <title>Welcome to Antenna Optimization Tool</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
     <style>
         .container {
             margin-top: 50px;
@@ -17,6 +23,9 @@
         .small-font {
             font-size: 14px;
         }
+        p {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -26,10 +35,10 @@
             <form action="{{ url_for('hello_world') }}" method="post">
                 <label for="model-number">Select Antenna Model Number:</label>
                 <select id="model-number" name="model_number" class="form-control">
-                    <option value="" disabled selected>Select a model number</option>
-                    <option value="MS-MBA-3.2-H4-L4">MS-MBA-3.2-H4-L4</option>
-                    <option value="MS-4.2DB60-B">MS-4.2DB60-B</option>
-                    <option value="MS-6.3DB90-A">MS-6.3DB90-A</option>
+                    <option disabled selected>Select a model number</option>
+                    {% for item in antennas %}
+                        <option value="{{ item.model_number }}">{{ item.model_number }}</option>
+                    {% endfor %}
                     <!-- Add more options for other models -->
                 </select>
                 <button style="text-align: center" class="btn btn-primary mt-2" type="submit">Show Data</button>
@@ -37,108 +46,160 @@
         </div>
         {% if Data %}
         <div style="margin-left: 15px; margin-right: 15px;" class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 style="text-align: center;">{{ test["model_number"] }}</h6>
-                        <table class="table small-font">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>1695-2690 MHz</th>
-                                    <th>698-960 MHz</th>
-                                </tr>
-                            </thead>
-                            <tbody id="antenna-data">
-                            <tr>
-                                <td>Horizontal Beamwidth (3dB Level)</td>
-                                <td>{{ hor_beam_high }}&deg;</td>
-                                <td>{{ hor_beam_low }}&deg;</td>
-                            </tr>
-                            <tr>
-                                <td>Vertical Beamwidth (3dB Level)</td>
-                                <td>{{ ver_beam_high }}&deg;</td>
-                                <td>{{ ver_beam_low }}&deg;</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <table class="table small-font">
-                            <thead>
-                                <tr>
-                                    <th>High Band Beams</th>
-                                    <th>Azimuth</th>
-                                </tr>
-                            </thead>
-                            <tbody id="antenna-data">
-                            {% for i in range(1, high_beam + 1) %}
-                                <tr>
-                                    <td>HB Beam {{ i }}</td>
-                                    <td>{{ test["high_band_azimuth_" ~ i] }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <table class="table small-font">
-                            <thead>
-                                <tr>
-                                    <th>Low Band Beams</th>
-                                    <th>Azimuth</th>
-                                </tr>
-                            </thead>
-                            <tbody id="antenna-data">
-                            {% for i in range(1, low_beam + 1) %}
-                                <tr>
-                                    <td>LB Beam {{ i }}</td>
-                                    <td>{{ test["low_band_azimuth_" ~ i] }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+            <div class="col-md-12">
+                <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#content1" role="tab" aria-controls="content1" aria-selected="true">Range</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#content2" role="tab" aria-controls="content2" aria-selected="false">Beam Angles</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="content1" role="tabpanel" aria-labelledby="tab1">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
+                                        <label for="acl-input">Enter ACL:</label>
+                                        <input type="text" id="acl-input" class="form-control">
+                                        <label for="acl-input">Select Tilt Range:</label>
+                                        <select id="tilt-select" class="form-control">
+                                            {% for i in range(from_high_band, to_high_band + 1) %}
+                                                <option value="{{ i }}">{{ i }}&deg;</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                        <p style="margin-top: 10px;" id="lower-3db"></p>
+                                        <p id="upper-3db"></p>
+                                        <p id="main-lobe"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
+                                        <label for="acl-input">Enter ACL:</label>
+                                        <input type="text" id="acl-input-lowband" class="form-control">
+                                        <label for="acl-input">Select Tilt Range:</label>
+                                        <select id="tilt-select-lowband" class="form-control">
+                                            {% for i in range(from_low_band, to_low_band + 1) %}
+                                                <option value="{{ i }}">{{ i }}&deg;</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                        <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
+                                        <p id="upper-3db-lowband"></p>
+                                        <p id="main-lobe-lowband"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if test["cbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Beamtilt - C Band</h2>
+                                            <label for="acl-input">Enter ACL:</label>
+                                            <input type="text" id="acl-input-cband" class="form-control">
+                                            <label for="acl-input">Select Tilt Range:</label>
+                                            <select id="tilt-select-cband" class="form-control">
+                                                {% for i in range(from_c_band, to_c_band + 1) %}
+                                                    <option value="{{ i }}">{{ i }}&deg;</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button onclick="calculateDistanceCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-cband"></p>
+                                            <p id="upper-3db-cband"></p>
+                                            <p id="main-lobe-cband"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
-                        <label for="acl-input">Enter ACL:</label>
-                        <input type="text" id="acl-input" class="form-control">
-                        <label for="acl-input">Select Tilt Range:</label>
-                        <select id="tilt-select" class="form-control">
-                        {% for i in range(from_high_band, to_high_band + 1) %}
-                            <option value="{{ i }}">{{ i }}&deg;</option>
-                        {% endfor %}
-                        </select>
-                        <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
-                        <p style="margin-top: 10px;" id="lower-3db"></p>
-                        <p id="upper-3db"></p>
-                        <p id="main-lobe"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
-                        <label for="acl-input">Enter ACL:</label>
-                        <input type="text" id="acl-input-lowband" class="form-control">
-                        <label for="acl-input">Select Tilt Range:</label>
-                        <select id="tilt-select-lowband" class="form-control">
-                        {% for i in range(from_low_band, to_low_band + 1) %}
-                            <option value="{{ i }}">{{ i }}&deg;</option>
-                        {% endfor %}
-                        </select>
-                        <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
-                        <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
-                        <p id="upper-3db-lowband"></p>
-                        <p id="main-lobe-lowband"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                    <div class="tab-pane fade" id="content2" role="tabpanel" aria-labelledby="tab2">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 style="text-align: center;">{{ test["model_number"] }}</h6>
+                                        <table class="table small-font">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    {% if test["cband_freq"] %}
+                                                        <th>{{ test["cband_freq"] }} GHz</th>
+                                                    {% endif %}
+                                                    <th>{{ high_band_freq }} MHz</th>
+                                                    <th>{{ low_band_freq }} MHz</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="antenna-data">
+                                                <tr>
+                                                    <td>Horizontal Beamwidth (3dB Level)</td>
+                                                    {% if test["cband_freq"] %}
+                                                        <td>{{ test["hor_beam_cband"] }}&deg;</td>
+                                                    {% endif %}
+                                                    <td>{{ hor_beam_high }}&deg;</td>
+                                                    <td>{{ hor_beam_low }}&deg;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Vertical Beamwidth (3dB Level)</td>
+                                                    {% if test["cband_freq"] %}
+                                                        <td>{{ test["ver_beam_cband"] }}&deg;</td>
+                                                    {% endif %}
+                                                    <td>{{ ver_beam_high }}&deg;</td>
+                                                    <td>{{ ver_beam_low }}&deg;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        {% if test["azimuth_data_tf"] == "true" %}
+                                            <table class="table small-font">
+                                                <thead>
+                                                    <tr>
+                                                        <th>High Band Beams</th>
+                                                        <th>Azimuth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="antenna-data">
+                                                    {% for i in range(1, high_beam + 1) %}
+                                                        <tr>
+                                                            <td>HB Beam {{ i }}</td>
+                                                            <td>{{ test["high_band_azimuth_" ~ i] }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            <table class="table small-font">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Low Band Beams</th>
+                                                        <th>Azimuth</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="antenna-data">
+                                                    {% for i in range(1, low_beam + 1) %}
+                                                        <tr>
+                                                            <td>LB Beam {{ i }}</td>
+                                                            <td>{{ test["low_band_azimuth_" ~ i] }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -386,7 +447,120 @@
       };
     image.src = imageUrl;
     }
+    function calculateDistanceCBand() {
+      var H = parseInt(document.getElementById('acl-input-cband').value);
+      var aSelect = document.getElementById('tilt-select-cband');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_cband }}; // Assuming you have a value for ver_beam_high
 
+      var H_miles = H / 5280;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = (H_miles / Math.tan((B / 2 + a))).toFixed(3);
+      var km_lowerdb = (H_km / Math.tan((B / 2 + a))).toFixed(3);
+
+      var miles_upperdb = (H_miles / Math.tan((a - B / 2))).toFixed(3);
+      var km_upperdb = (H_km / Math.tan((a - B / 2))).toFixed(3);
+
+      var miles_mainlobe = (H_miles / Math.tan((a))).toFixed(3);
+      var km_mainlobe = (H_km / Math.tan((a))).toFixed(3);
+
+      var horizon = Math.sqrt(2 * H);
+      console.log(horizon);
+
+      document.getElementById('lower-3db-cband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
+      document.getElementById('upper-3db-cband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
+      document.getElementById('main-lobe-cband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+
+        // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(Low Band)";
+        context.fillText(bandType, 100, 200);
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+        var upper3db = `${miles_upperdb} miles`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} miles`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb}`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb}`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe}`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+
+        // Replace the existing image with the modified image
+        var existingImage = document.querySelector(".col-md-4 img");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
 
     </script>
 </body>
