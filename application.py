@@ -3,7 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 application = Flask(__name__, template_folder="Templates")
 
-application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/antenna_tool'
+#AWS DB URI
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@antenna-tool-db.cwvdgyt4btit.us-east-1.rds.amazonaws.com:5432/antenna_tool_db'
+
+#DEVELOPMENT URI
+#application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/antenna_tool'
 application.config['SECRET_KEY'] = 'secret!'
 application.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(application)
