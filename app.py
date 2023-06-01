@@ -58,6 +58,12 @@ class AntennaInfo(db.Model):
     hor_beam_cband = db.Column(db.String(50))
     cbeam_count = db.Column(db.String(50))
     c_band_tilt_range = db.Column(db.String(50))
+    ver_beam_fband = db.Column(db.String(50))
+    hor_beam_fband = db.Column(db.String(50))
+    fbeam_count = db.Column(db.String(50))
+    f_band_tilt_range = db.Column(db.String(50))
+    fband_freq = db.Column(db.String(50))
+
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
@@ -69,6 +75,8 @@ def hello_world():
         to_low_band_range = None
         from_c_band_range = None
         to_c_band_range = None
+        from_f_band_range = None
+        to_f_band_range = None
         selected_model = request.form['model_number']
         antenna = AntennaInfo.query.filter(AntennaInfo.model_number == selected_model).first()
         attributes = vars(antenna)
@@ -88,6 +96,9 @@ def hello_world():
         high_band_f = attributes['high_band_freq']
         low_band_f = attributes['low_band_freq']
         c_tilt = attributes['c_band_tilt_range']
+        ver_beam_c = attributes['ver_beam_cband']
+        ver_beam_f = attributes['ver_beam_fband']
+        f_tilt = attributes['f_band_tilt_range']
         if high_tilt:
             elements = high_tilt.split(" to ")
             from_high_band_range = int(elements[0])
@@ -100,6 +111,10 @@ def hello_world():
             elements3 = c_tilt.split(" to ")
             from_c_band_range = int(elements3[0])
             to_c_band_range = int(elements3[1])
+        if f_tilt:
+            elements4 = f_tilt.split(" to ")
+            from_f_band_range = int(elements4[0])
+            to_f_band_range = int(elements4[1])
         # print(high_beam_Count, low_beam_Count)
         # print(from_low_band_range, to_low_band_range)
         Data = True
@@ -107,7 +122,8 @@ def hello_world():
                                ver_beam_high=ver_beam_high, ver_beam_low=ver_beam_low, hor_beam_low=hor_beam_low, hor_beam_high=hor_beam_high,
                                from_high_band=from_high_band_range, to_high_band=to_high_band_range,
                                from_low_band=from_low_band_range, to_low_band=to_low_band_range, antennas=antennas,
-                               high_band_freq=high_band_f, low_band_freq=low_band_f, from_c_band=from_c_band_range, to_c_band=to_c_band_range
+                               high_band_freq=high_band_f, low_band_freq=low_band_f, from_c_band=from_c_band_range, to_c_band=to_c_band_range,
+                               ver_beam_c=ver_beam_c, from_f_band=from_f_band_range, to_f_band=to_f_band_range, ver_beam_f=ver_beam_f
                                )
     return render_template("home.html", antennas=antennas)
 

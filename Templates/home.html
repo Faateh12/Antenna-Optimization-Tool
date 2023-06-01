@@ -9,6 +9,8 @@
 
     <!-- Bootstrap JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
 
     <style>
         .container {
@@ -29,7 +31,6 @@
     </style>
 </head>
 <body>
-<!--    <div class="container">-->
         <h3 style="text-align: center; margin-top: 15px;">Welcome to Antenna Optimization Tool</h3>
         <div class="form-group d-flex justify-content-center">
             <form action="{{ url_for('hello_world') }}" method="post">
@@ -49,7 +50,7 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#content1" role="tab" aria-controls="content1" aria-selected="true">Range</a>
+                        <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#content1" role="tab" aria-controls="content1" aria-selected="true">Cell Range</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#content2" role="tab" aria-controls="content2" aria-selected="false">Beam Angles</a>
@@ -57,7 +58,15 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="content1" role="tabpanel" aria-labelledby="tab1">
+                        <h2 style="text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h2>
                         <div class="row">
+                            <div class="col-md-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <img src="static/images/{{ test['model_number'] }}.png" alt="antenna-image" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <div class="card">
                                     <div class="card-body">
@@ -117,6 +126,27 @@
                                     </div>
                                 </div>
                             {% endif %}
+                            {% if test["fbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Beamtilt - F Band</h2>
+                                            <label for="acl-input">Enter ACL:</label>
+                                            <input type="text" id="acl-input-fband" class="form-control">
+                                            <label for="acl-input">Select Tilt Range:</label>
+                                            <select id="tilt-select-fband" class="form-control">
+                                                {% for i in range(from_f_band, to_f_band + 1) %}
+                                                    <option value="{{ i }}">{{ i }}&deg;</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button onclick="calculateDistanceFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-fband"></p>
+                                            <p id="upper-3db-fband"></p>
+                                            <p id="main-lobe-fband"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-body">
@@ -139,6 +169,9 @@
                                                     {% if test["cband_freq"] %}
                                                         <th>{{ test["cband_freq"] }} GHz</th>
                                                     {% endif %}
+                                                    {% if test["fband_freq"] %}
+                                                        <th>{{ test["fband_freq"] }} GHz</th>
+                                                    {% endif %}
                                                     <th>{{ high_band_freq }} MHz</th>
                                                     <th>{{ low_band_freq }} MHz</th>
                                                 </tr>
@@ -149,6 +182,9 @@
                                                     {% if test["cband_freq"] %}
                                                         <td>{{ test["hor_beam_cband"] }}&deg;</td>
                                                     {% endif %}
+                                                    {% if test["fband_freq"] %}
+                                                        <td>{{ test["hor_beam_fband"] }}&deg;</td>
+                                                    {% endif %}
                                                     <td>{{ hor_beam_high }}&deg;</td>
                                                     <td>{{ hor_beam_low }}&deg;</td>
                                                 </tr>
@@ -156,6 +192,9 @@
                                                     <td>Vertical Beamwidth (3dB Level)</td>
                                                     {% if test["cband_freq"] %}
                                                         <td>{{ test["ver_beam_cband"] }}&deg;</td>
+                                                    {% endif %}
+                                                    {% if test["fband_freq"] %}
+                                                        <td>{{ test["ver_beam_fband"] }}&deg;</td>
                                                     {% endif %}
                                                     <td>{{ ver_beam_high }}&deg;</td>
                                                     <td>{{ ver_beam_low }}&deg;</td>
@@ -205,11 +244,7 @@
             </div>
         </div>
         {% endif %}
-<!--    </div>-->
     <script>
-
-
-
 
     function calculateDistanceHighBand() {
       var H = parseInt(document.getElementById('acl-input').value);
@@ -447,11 +482,13 @@
       };
     image.src = imageUrl;
     }
+
     function calculateDistanceCBand() {
       var H = parseInt(document.getElementById('acl-input-cband').value);
       var aSelect = document.getElementById('tilt-select-cband');
       var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
-      var BDegrees = {{ ver_beam_cband }}; // Assuming you have a value for ver_beam_high
+      var BDegrees = {{ ver_beam_c }}; // Assuming you have a value for ver_beam_high
+      console.log(BDegrees);
 
       var H_miles = H / 5280;
       var H_km = H * 0.3048 / 1000;
@@ -500,7 +537,123 @@
         context.font = "20px Arial";
         context.fillStyle = "black";
 
-        var bandType = "(Low Band)";
+        var bandType = "(C Band)";
+        context.fillText(bandType, 100, 200);
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+        var upper3db = `${miles_upperdb} miles`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} miles`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb}`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb}`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe}`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+
+        // Replace the existing image with the modified image
+        var existingImage = document.querySelector(".col-md-4 img");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
+    function calculateDistanceFBand() {
+      var H = parseInt(document.getElementById('acl-input-fband').value);
+      var aSelect = document.getElementById('tilt-select-fband');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_f }}; // Assuming you have a value for ver_beam_high
+      console.log(BDegrees);
+
+      var H_miles = H / 5280;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = (H_miles / Math.tan((B / 2 + a))).toFixed(3);
+      var km_lowerdb = (H_km / Math.tan((B / 2 + a))).toFixed(3);
+
+      var miles_upperdb = (H_miles / Math.tan((a - B / 2))).toFixed(3);
+      var km_upperdb = (H_km / Math.tan((a - B / 2))).toFixed(3);
+
+      var miles_mainlobe = (H_miles / Math.tan((a))).toFixed(3);
+      var km_mainlobe = (H_km / Math.tan((a))).toFixed(3);
+
+      var horizon = Math.sqrt(2 * H);
+      console.log(horizon);
+
+      document.getElementById('lower-3db-fband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
+      document.getElementById('upper-3db-fband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
+      document.getElementById('main-lobe-fband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+
+        // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(F Band)";
         context.fillText(bandType, 100, 200);
 
         // Define the text content and position
