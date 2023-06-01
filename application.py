@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, template_folder="Templates")
+application = Flask(__name__, template_folder="Templates")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/antenna_tool'
-app.config['SECRET_KEY'] = 'secret!'
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
+application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/antenna_tool'
+application.config['SECRET_KEY'] = 'secret!'
+application.config['SQLALCHEMY_ECHO'] = True
+db = SQLAlchemy(application)
 
 class AntennaInfo(db.Model):
     __tablename__ = 'antenna_info'
@@ -65,7 +65,7 @@ class AntennaInfo(db.Model):
     fband_freq = db.Column(db.String(50))
 
 
-@app.route('/', methods=['GET', 'POST'])
+@application.route('/', methods=['GET', 'POST'])
 def hello_world():
     antennas = AntennaInfo.query.all()
     if request.method == "POST":
@@ -127,15 +127,8 @@ def hello_world():
                                )
     return render_template("home.html", antennas=antennas)
 
-# with app.app_context():
-#     # Create the tables
-#     db.create_all()
-
-# @app.route('/calculate', methods=['GET', 'POST'])
-# def hello_world():
-#     pass
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(debug=True)

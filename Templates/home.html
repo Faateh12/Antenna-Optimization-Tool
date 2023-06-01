@@ -28,13 +28,51 @@
         p {
             font-weight: bold;
         }
+        .navbar-img {
+            width: 200px;
+            height: 90px;
+        }
+        .nav-tabs {
+            border-bottom: none;
+            background-color: #f8f9fa;
+        }
+
+        .nav-tabs .nav-link {
+            color: #495057;
+            background-color: #f8f9fa;
+            border: none;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #007bff;
+            background-color: #ffffff;
+            border-color: #007bff;
+        }
+
+        .tab-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
     </style>
 </head>
 <body>
-        <h3 style="text-align: center; margin-top: 15px;">Welcome to Antenna Optimization Tool</h3>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="padding-top: 0px; padding-bottom: 0px; background-color: #F7CAC9;">
+          <img class="navbar-img" src="{{ url_for('static', filename='images/Matsing-logo.png') }}" alt="Matsing Logo">
+        </nav>
+        <h3 style="text-align: center; margin-top: 15px;">Welcome to the Antenna Optimization Tool</h3>
         <div class="form-group d-flex justify-content-center">
-            <form action="{{ url_for('hello_world') }}" method="post">
-                <label for="model-number">Select Antenna Model Number:</label>
+            <form action="{{ url_for('hello_world') }}" method="post" style="max-width: 400px;">
+                <label for="model-number" style="font-weight: bold; margin-bottom: 10px;">Select Antenna Model Number:</label>
                 <select id="model-number" name="model_number" class="form-control">
                     <option disabled selected>Select a model number</option>
                     {% for item in antennas %}
@@ -42,9 +80,10 @@
                     {% endfor %}
                     <!-- Add more options for other models -->
                 </select>
-                <button style="text-align: center" class="btn btn-primary mt-2" type="submit">Show Data</button>
+                <button class="btn btn-primary mt-3" type="submit" style="width: 100%;">Show Data</button>
             </form>
         </div>
+
         {% if Data %}
         <div style="margin-left: 15px; margin-right: 15px;" class="row">
             <div class="col-md-12">
@@ -58,58 +97,22 @@
                 </ul>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="content1" role="tabpanel" aria-labelledby="tab1">
-                        <h2 style="text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h2>
+<!--                        <h2 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h2>-->
                         <div class="row">
                             <div class="col-md-2">
-                                <div class="card">
+                                <h4 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h4>
+                                <div class="card shadow">
                                     <div class="card-body">
                                         <img src="static/images/{{ test['model_number'] }}.png" alt="antenna-image" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
-                                        <label for="acl-input">Enter ACL:</label>
-                                        <input type="text" id="acl-input" class="form-control">
-                                        <label for="acl-input">Select Tilt Range:</label>
-                                        <select id="tilt-select" class="form-control">
-                                            {% for i in range(from_high_band, to_high_band + 1) %}
-                                                <option value="{{ i }}">{{ i }}&deg;</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
-                                        <p style="margin-top: 10px;" id="lower-3db"></p>
-                                        <p id="upper-3db"></p>
-                                        <p id="main-lobe"></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
-                                        <label for="acl-input">Enter ACL:</label>
-                                        <input type="text" id="acl-input-lowband" class="form-control">
-                                        <label for="acl-input">Select Tilt Range:</label>
-                                        <select id="tilt-select-lowband" class="form-control">
-                                            {% for i in range(from_low_band, to_low_band + 1) %}
-                                                <option value="{{ i }}">{{ i }}&deg;</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
-                                        <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
-                                        <p id="upper-3db-lowband"></p>
-                                        <p id="main-lobe-lowband"></p>
-                                    </div>
-                                </div>
-                            </div>
                             {% if test["cbeam_count"] %}
                                 <div class="col-md-2">
-                                    <div class="card">
+                                    <div class="card shadow">
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - C Band</h2>
+                                            <p style="text-align: center;">({{ test["cband_freq"] }}) GHz</p>
                                             <label for="acl-input">Enter ACL:</label>
                                             <input type="text" id="acl-input-cband" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
@@ -128,9 +131,10 @@
                             {% endif %}
                             {% if test["fbeam_count"] %}
                                 <div class="col-md-2">
-                                    <div class="card">
+                                    <div class="card shadow">
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - F Band</h2>
+                                            <p style="text-align: center;">({{ test["fband_freq"] }}) GHz</p>
                                             <label for="acl-input">Enter ACL:</label>
                                             <input type="text" id="acl-input-fband" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
@@ -147,8 +151,48 @@
                                     </div>
                                 </div>
                             {% endif %}
+                            <div class="col-md-2">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
+                                        <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
+                                        <label for="acl-input">Enter ACL:</label>
+                                        <input type="text" id="acl-input" class="form-control">
+                                        <label for="acl-input">Select Tilt Range:</label>
+                                        <select id="tilt-select" class="form-control">
+                                            {% for i in range(from_high_band, to_high_band + 1) %}
+                                                <option value="{{ i }}">{{ i }}&deg;</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                        <p style="margin-top: 10px;" id="lower-3db"></p>
+                                        <p id="upper-3db"></p>
+                                        <p id="main-lobe"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
+                                        <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
+                                        <label for="acl-input">Enter ACL:</label>
+                                        <input type="text" id="acl-input-lowband" class="form-control">
+                                        <label for="acl-input">Select Tilt Range:</label>
+                                        <select id="tilt-select-lowband" class="form-control">
+                                            {% for i in range(from_low_band, to_low_band + 1) %}
+                                                <option value="{{ i }}">{{ i }}&deg;</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                        <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
+                                        <p id="upper-3db-lowband"></p>
+                                        <p id="main-lobe-lowband"></p>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-4">
-                                <div class="card">
+                                <div class="card shadow">
                                     <div class="card-body">
                                         <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
                                     </div>
