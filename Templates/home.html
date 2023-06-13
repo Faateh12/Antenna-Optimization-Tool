@@ -154,46 +154,50 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            <div class="col-md-2">
-                                <div class="card shadow">
-                                    <div class="card-body">
-                                        <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
-                                        <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
-                                        <label for="acl-input">Enter ACL:</label>
-                                        <input type="text" id="acl-input" class="form-control">
-                                        <label for="acl-input">Select Tilt Range:</label>
-                                        <select id="tilt-select" class="form-control">
-                                            {% for i in range(from_high_band, to_high_band + 1) %}
-                                                <option value="{{ i }}">{{ i }}&deg;</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
-                                        <p style="margin-top: 10px;" id="lower-3db"></p>
-                                        <p id="upper-3db"></p>
-                                        <p id="main-lobe"></p>
+                            {% if test["high_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
+                                            <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
+                                            <label for="acl-input">Enter ACL:</label>
+                                            <input type="text" id="acl-input" class="form-control">
+                                            <label for="acl-input">Select Tilt Range:</label>
+                                            <select id="tilt-select" class="form-control">
+                                                {% for i in range(from_high_band, to_high_band + 1) %}
+                                                    <option value="{{ i }}">{{ i }}&deg;</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db"></p>
+                                            <p id="upper-3db"></p>
+                                            <p id="main-lobe"></p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="card shadow">
-                                    <div class="card-body">
-                                        <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
-                                        <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
-                                        <label for="acl-input">Enter ACL:</label>
-                                        <input type="text" id="acl-input-lowband" class="form-control">
-                                        <label for="acl-input">Select Tilt Range:</label>
-                                        <select id="tilt-select-lowband" class="form-control">
-                                            {% for i in range(from_low_band, to_low_band + 1) %}
-                                                <option value="{{ i }}">{{ i }}&deg;</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
-                                        <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
-                                        <p id="upper-3db-lowband"></p>
-                                        <p id="main-lobe-lowband"></p>
+                            {% endif %}
+                            {% if test["low_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
+                                            <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
+                                            <label for="acl-input">Enter ACL:</label>
+                                            <input type="text" id="acl-input-lowband" class="form-control">
+                                            <label for="acl-input">Select Tilt Range:</label>
+                                            <select id="tilt-select-lowband" class="form-control">
+                                                {% for i in range(from_low_band, to_low_band + 1) %}
+                                                    <option value="{{ i }}">{{ i }}&deg;</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
+                                            <p id="upper-3db-lowband"></p>
+                                            <p id="main-lobe-lowband"></p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
                             <div class="col-md-4">
                                 <div class="card shadow">
                                     <div class="card-body">
@@ -230,8 +234,12 @@
                                                     {% if test["fband_freq"] %}
                                                         <th>{{ test["fband_freq"] }} GHz</th>
                                                     {% endif %}
-                                                    <th>{{ high_band_freq }} MHz</th>
-                                                    <th>{{ low_band_freq }} MHz</th>
+                                                    {% if test["high_band_freq"] %}
+                                                        <th>{{ high_band_freq }} MHz</th>
+                                                    {% endif %}
+                                                    {% if test["low_band_freq"] %}
+                                                        <th>{{ low_band_freq }} MHz</th>
+                                                    {% endif %}
                                                 </tr>
                                             </thead>
                                             <tbody id="antenna-data">
@@ -243,8 +251,12 @@
                                                     {% if test["fband_freq"] %}
                                                         <td>{{ test["hor_beam_fband"] }}&deg;</td>
                                                     {% endif %}
-                                                    <td>{{ hor_beam_high }}&deg;</td>
-                                                    <td>{{ hor_beam_low }}&deg;</td>
+                                                    {% if test["high_band_freq"] %}
+                                                        <td>{{ hor_beam_high }}&deg;</td>
+                                                    {% endif %}
+                                                    {% if test["low_band_freq"] %}
+                                                        <td>{{ hor_beam_low }}&deg;</td>
+                                                    {% endif %}
                                                 </tr>
                                                 <tr>
                                                     <td>Vertical Beamwidth (3dB Level)</td>
@@ -254,8 +266,12 @@
                                                     {% if test["fband_freq"] %}
                                                         <td>{{ test["ver_beam_fband"] }}&deg;</td>
                                                     {% endif %}
-                                                    <td>{{ ver_beam_high }}&deg;</td>
-                                                    <td>{{ ver_beam_low }}&deg;</td>
+                                                    {% if test["high_band_freq"] %}
+                                                        <td>{{ ver_beam_high }}&deg;</td>
+                                                    {% endif %}
+                                                    {% if test["low_band_freq"] %}
+                                                        <td>{{ ver_beam_low }}&deg;</td>
+                                                    {% endif %}
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -268,7 +284,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="antenna-data">
-                                                    {% for i in range(1, high_beam + 1) %}
+                                                    {% for i in range(1, int(test["high_beam_count"]) + 1) %}
                                                         <tr>
                                                             <td>HB Beam {{ i }}</td>
                                                             <td>{{ test["high_band_azimuth_" ~ i] }}</td>
@@ -284,7 +300,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="antenna-data">
-                                                    {% for i in range(1, low_beam + 1) %}
+                                                    {% for i in range(1, int(test["low_beam_count"]) + 1) %}
                                                         <tr>
                                                             <td>LB Beam {{ i }}</td>
                                                             <td>{{ test["low_band_azimuth_" ~ i] }}</td>

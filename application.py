@@ -122,7 +122,7 @@ def hello_world():
         # print(high_beam_Count, low_beam_Count)
         # print(from_low_band_range, to_low_band_range)
         Data = True
-        return render_template('home.html', antenna=antenna, Data=Data, test=test, high_beam=int(high_beam_Count), low_beam=int(low_beam_Count),
+        return render_template('home.html', antenna=antenna, Data=Data, test=test,
                                ver_beam_high=ver_beam_high, ver_beam_low=ver_beam_low, hor_beam_low=hor_beam_low, hor_beam_high=hor_beam_high,
                                from_high_band=from_high_band_range, to_high_band=to_high_band_range,
                                from_low_band=from_low_band_range, to_low_band=to_low_band_range, antennas=antennas,
