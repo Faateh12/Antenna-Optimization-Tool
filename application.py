@@ -81,16 +81,22 @@ def hello_world():
         to_c_band_range = None
         from_f_band_range = None
         to_f_band_range = None
+        high_beam_Count = None
+        low_beam_Count = None
         selected_model = request.form['model_number']
+        print(selected_model)
         antenna = AntennaInfo.query.filter(AntennaInfo.model_number == selected_model).first()
         attributes = vars(antenna)
+        print(len(attributes))
         print(type(attributes))
         # attribute_values = list(attributes.values())
         test = {key: value for key, value in attributes.items() if value != None}
         for key, value in test.items():
             print(key, value)
-        high_beam_Count = attributes['high_beam_count']
-        low_beam_Count = attributes['low_beam_count']
+        if attributes['high_beam_count']:
+            high_beam_Count = int(attributes['high_beam_count'])
+        if attributes['low_beam_count']:
+            low_beam_Count = int(attributes['low_beam_count'])
         ver_beam_high = attributes['ver_beam_3db_high']
         ver_beam_low = attributes['ver_beam_3db_low']
         hor_beam_high = attributes['hor_beam_3db_high']
@@ -127,8 +133,8 @@ def hello_world():
                                from_high_band=from_high_band_range, to_high_band=to_high_band_range,
                                from_low_band=from_low_band_range, to_low_band=to_low_band_range, antennas=antennas,
                                high_band_freq=high_band_f, low_band_freq=low_band_f, from_c_band=from_c_band_range, to_c_band=to_c_band_range,
-                               ver_beam_c=ver_beam_c, from_f_band=from_f_band_range, to_f_band=to_f_band_range, ver_beam_f=ver_beam_f
-                               )
+                               ver_beam_c=ver_beam_c, from_f_band=from_f_band_range, to_f_band=to_f_band_range, ver_beam_f=ver_beam_f,
+                               high_beams=high_beam_Count, low_beams=low_beam_Count)
     return render_template("home.html", antennas=antennas)
 
 

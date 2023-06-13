@@ -284,7 +284,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="antenna-data">
-                                                    {% for i in range(1, int(test["high_beam_count"]) + 1) %}
+                                                    {% for i in range(1, high_beams + 1) %}
                                                         <tr>
                                                             <td>HB Beam {{ i }}</td>
                                                             <td>{{ test["high_band_azimuth_" ~ i] }}</td>
@@ -300,7 +300,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="antenna-data">
-                                                    {% for i in range(1, int(test["low_beam_count"]) + 1) %}
+                                                    {% for i in range(1, low_beams + 1) %}
                                                         <tr>
                                                             <td>LB Beam {{ i }}</td>
                                                             <td>{{ test["low_band_azimuth_" ~ i] }}</td>
