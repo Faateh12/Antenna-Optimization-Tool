@@ -11,6 +11,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+
 
     <style>
         .container {
@@ -76,16 +78,80 @@
         <div class="form-group d-flex justify-content-center">
             <form action="{{ url_for('hello_world') }}" method="post" style="max-width: 400px;">
                 <label for="model-number" style="font-weight: bold; margin-bottom: 10px;">Select Antenna Model Number:</label>
-                <select id="model-number" name="model_number" class="form-control">
-                    <option disabled selected>Select a model number</option>
+                <input style="width: 275px;" type="text" id="model-number-input" class="form-control" placeholder="Search Antenna Model Number" list="model-number-list" name="model_number" autocomplete="off">
+                <datalist id="model-number-list">
                     {% for item in antennas %}
                         <option value="{{ item.model_number }}">{{ item.model_number }}</option>
                     {% endfor %}
                     <!-- Add more options for other models -->
-                </select>
+                </datalist>
                 <button class="btn btn-primary mt-3" type="submit" style="width: 100%;">Show Data</button>
             </form>
         </div>
+
+        <div id="no-results-message" style="display: none; text-align: center; margin-top: 10px; color: red;">No results found.</div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#model-number-input').on('input', function() {
+                    var inputVal = $(this).val();
+                    var options = $('#model-number-list option');
+                    var matchFound = false;
+
+                    options.each(function() {
+                        var optionVal = $(this).val();
+                        if (optionVal.toLowerCase().indexOf(inputVal.toLowerCase()) === 0) {
+                            matchFound = true;
+                            $(this).attr('selected', true);
+                            return false; // Break the loop if a match is found
+                        }
+                    });
+
+                    if (!matchFound) {
+                        options.removeAttr('selected');
+                    }
+                });
+
+                $('form').on('submit', function() {
+                    var inputVal = $('#model-number-input').val();
+                    var options = $('#model-number-list option');
+                    var matchFound = false;
+
+                    options.each(function() {
+                        var optionVal = $(this).val();
+                        if (optionVal.toLowerCase() === inputVal.toLowerCase()) {
+                            matchFound = true;
+                            return false; // Break the loop if a match is found
+                        }
+                    });
+
+                    if (!matchFound) {
+                        $('#no-results-message').show();
+                        return false; // Prevent form submission
+                    } else {
+                        $('#no-results-message').hide();
+                    }
+                });
+
+                // Apply styles to the options
+                $('#model-number-list option').css({
+                    'font-family': 'Montserrat, sans-serif',
+                    'border': '1px solid #ccc',
+                    'padding': '5px'
+                });
+
+                // Apply hover effect to the options
+                $('#model-number-list option').hover(
+                    function() {
+                        $(this).css('background-color', '#f8f8f8');
+                    },
+                    function() {
+                        $(this).css('background-color', 'transparent');
+                    }
+                );
+            });
+        </script>
 
         {% if Data %}
         <div style="margin-left: 15px; margin-right: 15px;" class="row">
@@ -318,6 +384,7 @@
             </div>
         </div>
         {% endif %}
+
     <script>
 
     function calculateDistanceHighBand() {
