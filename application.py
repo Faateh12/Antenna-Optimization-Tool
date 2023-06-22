@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
+
+
 
 application = Flask(__name__, template_folder="Templates")
 
@@ -10,7 +13,15 @@ application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Faateh:Faateh123@a
 #application.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Faateh123@localhost:5432/antenna_tool'
 application.config['SECRET_KEY'] = 'secret!'
 application.config['SQLALCHEMY_ECHO'] = True
+application.config['MAIL_SERVER'] = 'smtp.gmail.com'
+application.config['MAIL_PORT'] = 587
+application.config['MAIL_USE_TLS'] = True
+application.config['MAIL_USERNAME'] = 'matsingtools@gmail.com'
+application.config['MAIL_PASSWORD'] = 'lvfnjwubxveklhjc'
+application.config['MAIL_DEFAULT_SENDER'] = 'matsingtools@gmail.com'
 db = SQLAlchemy(application)
+mail = Mail(application)
+
 
 class AntennaInfo(db.Model):
     __tablename__ = 'antenna_info'
@@ -67,6 +78,25 @@ class AntennaInfo(db.Model):
     fbeam_count = db.Column(db.String(50))
     f_band_tilt_range = db.Column(db.String(50))
     fband_freq = db.Column(db.String(50))
+
+def send_error_email(error, is_local=False):
+    if is_local:
+        recipients = ['faateh.work@gmail.com']
+        subject = 'Error in the Antenna Tool local host'
+    else:
+        recipients = ['faateh.work@gmail.com']
+        subject = 'Error in the Antenna Tool'
+
+    msg = Message(subject, recipients=recipients)
+    msg.html = render_template('error_email.html', error=error)
+
+    mail.send(msg)
+
+@application.errorhandler(500)
+def internal_server_error(error):
+    is_local = request.host == '127.0.0.1:5000'
+    send_error_email(error, is_local)
+    return render_template('500.html'), 500
 
 
 @application.route('/', methods=['GET', 'POST'])
