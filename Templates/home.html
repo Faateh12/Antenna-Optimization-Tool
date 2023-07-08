@@ -182,7 +182,7 @@
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - C Band</h2>
                                             <p style="text-align: center;">({{ test["cband_freq"] }}) GHz</p>
-                                            <label for="acl-input">Enter ACL:</label>
+                                            <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-cband" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
                                             <select id="tilt-select-cband" class="form-control">
@@ -204,7 +204,7 @@
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - F Band</h2>
                                             <p style="text-align: center;">({{ test["fband_freq"] }}) GHz</p>
-                                            <label for="acl-input">Enter ACL:</label>
+                                            <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-fband" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
                                             <select id="tilt-select-fband" class="form-control">
@@ -226,7 +226,7 @@
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
                                             <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
-                                            <label for="acl-input">Enter ACL:</label>
+                                            <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
                                             <select id="tilt-select" class="form-control">
@@ -248,7 +248,7 @@
                                         <div class="card-body">
                                             <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
                                             <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
-                                            <label for="acl-input">Enter ACL:</label>
+                                            <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-lowband" class="form-control">
                                             <label for="acl-input">Select Tilt Range:</label>
                                             <select id="tilt-select-lowband" class="form-control">
@@ -393,19 +393,19 @@
       var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
       var BDegrees = {{ ver_beam_high }}; // Assuming you have a value for ver_beam_high
 
-      var H_miles = H / 5280;
+      var H_miles = H;
       var H_km = H * 0.3048 / 1000;
 
       var a = aDegrees * Math.PI / 180;
       var B = BDegrees * Math.PI / 180;
 
-      var miles_lowerdb = Math.abs((H_miles / Math.tan((B / 2 + a)))).toFixed(3);
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
       var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
 
-      var miles_upperdb = Math.abs((H_miles / Math.tan((a - B / 2)))).toFixed(3);
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
       var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
 
-      var miles_mainlobe = Math.abs((H_miles / Math.tan((a)))).toFixed(3);
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
       var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
 
 
@@ -415,9 +415,9 @@
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
 
-      document.getElementById('lower-3db').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
-      document.getElementById('upper-3db').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
-      document.getElementById('main-lobe').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+      document.getElementById('lower-3db').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-3db').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
 
       // Create an image object
       var image = new Image();
@@ -446,6 +446,9 @@
 
         var bandType = "(High Band)";
         context.fillText(bandType, 100, 200);
+
+        var bandFreq = "{{ high_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
 
 
         // Define the text content and position
@@ -476,11 +479,11 @@
         context.fillText(beamwidth, x3, y3);
 
 
-        var upper3db = `${miles_upperdb} miles`;
+        var upper3db = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db, 420, 240);
 
-        var lower3db = `${miles_lowerdb} miles`;
+        var lower3db = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db, 320, 580);
 
@@ -516,27 +519,27 @@
       var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
       var BDegrees = {{ ver_beam_low }}; // Assuming you have a value for ver_beam_high
 
-      var H_miles = H / 5280;
+      var H_miles = H;
       var H_km = H * 0.3048 / 1000;
 
       var a = aDegrees * Math.PI / 180;
       var B = BDegrees * Math.PI / 180;
 
-      var miles_lowerdb = Math.abs((H_miles / Math.tan((B / 2 + a)))).toFixed(3);
+      var miles_lowerdb =   Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
       var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
 
-      var miles_upperdb = Math.abs((H_miles / Math.tan((a - B / 2)))).toFixed(3);
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
       var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
 
-      var miles_mainlobe = Math.abs((H_miles / Math.tan((a)))).toFixed(3);
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
       var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
 
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
 
-      document.getElementById('lower-3db-lowband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
-      document.getElementById('upper-3db-lowband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
-      document.getElementById('main-lobe-lowband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+      document.getElementById('lower-3db-lowband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-3db-lowband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-lowband').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
 
         // Create an image object
       var image = new Image();
@@ -566,6 +569,9 @@
         var bandType = "(Low Band)";
         context.fillText(bandType, 100, 200);
 
+        var bandFreq = "{{ low_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
+
         // Define the text content and position
         var height = `${H} feet`;
         var x = 430;
@@ -591,23 +597,23 @@
         // Add the text to the canvas
         context.fillText(beamwidth, x3, y3);
 
-        var upper3db = `${miles_upperdb} miles`;
+        var upper3db = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db, 420, 240);
 
-        var lower3db = `${miles_lowerdb} miles`;
+        var lower3db = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db, 320, 580);
 
-        var lower3db_display = `${miles_lowerdb}`;
+        var lower3db_display = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db_display, 440, 663);
 
-        var upper3db_display = `${miles_upperdb}`;
+        var upper3db_display = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db_display, 440, 712);
 
-        var mainlobe_display = `${miles_mainlobe}`;
+        var mainlobe_display = `${miles_mainlobe} ft`;
         // Add the text to the canvas
         context.fillText(mainlobe_display, 350, 760);
 
@@ -632,27 +638,27 @@
       var BDegrees = {{ ver_beam_c }}; // Assuming you have a value for ver_beam_high
       console.log(BDegrees);
 
-      var H_miles = H / 5280;
+      var H_miles = H;
       var H_km = H * 0.3048 / 1000;
 
       var a = aDegrees * Math.PI / 180;
       var B = BDegrees * Math.PI / 180;
 
-      var miles_lowerdb = Math.abs((H_miles / Math.tan((B / 2 + a)))).toFixed(3);
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
       var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
 
-      var miles_upperdb = Math.abs((H_miles / Math.tan((a - B / 2)))).toFixed(3);
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
       var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
 
-      var miles_mainlobe = Math.abs((H_miles / Math.tan((a)))).toFixed(3);
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
       var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
 
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
 
-      document.getElementById('lower-3db-cband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
-      document.getElementById('upper-3db-cband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
-      document.getElementById('main-lobe-cband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+      document.getElementById('lower-3db-cband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-3db-cband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-cband').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
 
         // Create an image object
       var image = new Image();
@@ -682,6 +688,9 @@
         var bandType = "(C Band)";
         context.fillText(bandType, 100, 200);
 
+        var bandFreq = "{{ c_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
+
         // Define the text content and position
         var height = `${H} feet`;
         var x = 430;
@@ -707,23 +716,23 @@
         // Add the text to the canvas
         context.fillText(beamwidth, x3, y3);
 
-        var upper3db = `${miles_upperdb} miles`;
+        var upper3db = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db, 420, 240);
 
-        var lower3db = `${miles_lowerdb} miles`;
+        var lower3db = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db, 320, 580);
 
-        var lower3db_display = `${miles_lowerdb}`;
+        var lower3db_display = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db_display, 440, 663);
 
-        var upper3db_display = `${miles_upperdb}`;
+        var upper3db_display = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db_display, 440, 712);
 
-        var mainlobe_display = `${miles_mainlobe}`;
+        var mainlobe_display = `${miles_mainlobe} ft`;
         // Add the text to the canvas
         context.fillText(mainlobe_display, 350, 760);
 
@@ -748,27 +757,27 @@
       var BDegrees = {{ ver_beam_f }}; // Assuming you have a value for ver_beam_high
       console.log(BDegrees);
 
-      var H_miles = H / 5280;
+      var H_miles = H;
       var H_km = H * 0.3048 / 1000;
 
       var a = aDegrees * Math.PI / 180;
       var B = BDegrees * Math.PI / 180;
 
-      var miles_lowerdb = Math.abs((H_miles / Math.tan((B / 2 + a)))).toFixed(3);
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
       var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
 
-      var miles_upperdb = Math.abs((H_miles / Math.tan((a - B / 2)))).toFixed(3);
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
       var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
 
-      var miles_mainlobe = Math.abs((H_miles / Math.tan((a)))).toFixed(3);
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
       var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
 
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
 
-      document.getElementById('lower-3db-fband').innerHTML = `Lower 3dB point (mi/km): ${miles_lowerdb}/${km_lowerdb}`;
-      document.getElementById('upper-3db-fband').innerHTML = `Upper 3dB point (mi/km): ${miles_upperdb}/${km_upperdb}`;
-      document.getElementById('main-lobe-fband').innerHTML = `Main Lobe (mi/km): ${miles_mainlobe}/${km_mainlobe}`;
+      document.getElementById('lower-3db-fband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-3db-fband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-fband').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
 
         // Create an image object
       var image = new Image();
@@ -798,6 +807,9 @@
         var bandType = "(F Band)";
         context.fillText(bandType, 100, 200);
 
+        var bandFreq = "{{ f_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
+
         // Define the text content and position
         var height = `${H} feet`;
         var x = 430;
@@ -823,23 +835,23 @@
         // Add the text to the canvas
         context.fillText(beamwidth, x3, y3);
 
-        var upper3db = `${miles_upperdb} miles`;
+        var upper3db = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db, 420, 240);
 
-        var lower3db = `${miles_lowerdb} miles`;
+        var lower3db = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db, 320, 580);
 
-        var lower3db_display = `${miles_lowerdb}`;
+        var lower3db_display = `${miles_lowerdb} ft`;
         // Add the text to the canvas
         context.fillText(lower3db_display, 440, 663);
 
-        var upper3db_display = `${miles_upperdb}`;
+        var upper3db_display = `${miles_upperdb} ft`;
         // Add the text to the canvas
         context.fillText(upper3db_display, 440, 712);
 
-        var mainlobe_display = `${miles_mainlobe}`;
+        var mainlobe_display = `${miles_mainlobe} ft`;
         // Add the text to the canvas
         context.fillText(mainlobe_display, 350, 760);
 

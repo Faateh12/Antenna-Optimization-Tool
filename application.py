@@ -139,6 +139,8 @@ def hello_world():
         ver_beam_c = attributes['ver_beam_cband']
         ver_beam_f = attributes['ver_beam_fband']
         f_tilt = attributes['f_band_tilt_range']
+        c_band_f = attributes['cband_freq']
+        f_band_f = attributes['fband_freq']
         if high_tilt:
             elements = high_tilt.split(" to ")
             from_high_band_range = int(elements[0])
@@ -164,7 +166,7 @@ def hello_world():
                                from_low_band=from_low_band_range, to_low_band=to_low_band_range, antennas=antennas,
                                high_band_freq=high_band_f, low_band_freq=low_band_f, from_c_band=from_c_band_range, to_c_band=to_c_band_range,
                                ver_beam_c=ver_beam_c, from_f_band=from_f_band_range, to_f_band=to_f_band_range, ver_beam_f=ver_beam_f,
-                               high_beams=high_beam_Count, low_beams=low_beam_Count)
+                               high_beams=high_beam_Count, low_beams=low_beam_Count, c_band_freq=c_band_f, f_band_freq=f_band_f)
     return render_template("home.html", antennas=antennas)
 
 
