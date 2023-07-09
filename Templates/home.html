@@ -158,10 +158,16 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#content1" role="tab" aria-controls="content1" aria-selected="true">Cell Range</a>
+                        <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#content1" role="tab" aria-controls="content1" aria-selected="true">Calculate 3dB Points</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#content2" role="tab" aria-controls="content2" aria-selected="false">Beam Azimuth</a>
+                        <a class="nav-link" id="tab4-tab" data-toggle="tab" href="#content4" role="tab" aria-controls="content4" aria-selected="true">Calculate 10dB Points</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#content2" role="tab" aria-controls="content2" aria-selected="false">Calculate Beam Azimuth</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="tab3-tab" data-toggle="tab" href="#content3" role="tab" aria-controls="content3" aria-selected="false">Calculate Tilt Values</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -180,7 +186,7 @@
                                 <div class="col-md-2">
                                     <div class="card shadow">
                                         <div class="card-body">
-                                            <h2 style="text-align: center;">Calculate Beamtilt - C Band</h2>
+                                            <h2 style="text-align: center;">Calculate 3dB Points - C Band</h2>
                                             <p style="text-align: center;">({{ test["cband_freq"] }}) GHz</p>
                                             <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-cband" class="form-control">
@@ -202,7 +208,7 @@
                                 <div class="col-md-2">
                                     <div class="card shadow">
                                         <div class="card-body">
-                                            <h2 style="text-align: center;">Calculate Beamtilt - F Band</h2>
+                                            <h2 style="text-align: center;">Calculate 3dB Points - F Band</h2>
                                             <p style="text-align: center;">({{ test["fband_freq"] }}) GHz</p>
                                             <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-fband" class="form-control">
@@ -224,7 +230,7 @@
                                 <div class="col-md-2">
                                     <div class="card shadow">
                                         <div class="card-body">
-                                            <h2 style="text-align: center;">Calculate Beamtilt - High Band</h2>
+                                            <h2 style="text-align: center;">Calculate 3dB Points - High Band</h2>
                                             <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
                                             <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input" class="form-control">
@@ -246,7 +252,7 @@
                                 <div class="col-md-2">
                                     <div class="card shadow">
                                         <div class="card-body">
-                                            <h2 style="text-align: center;">Calculate Beamtilt - Low Band</h2>
+                                            <h2 style="text-align: center;">Calculate 3dB Points - Low Band</h2>
                                             <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
                                             <label for="acl-input">Enter ACL (feet):</label>
                                             <input type="text" id="acl-input-lowband" class="form-control">
@@ -267,7 +273,7 @@
                             <div class="col-md-4">
                                 <div class="card shadow">
                                     <div class="card-body">
-                                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                                        <img id="image1" src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -375,6 +381,236 @@
                                                 </tbody>
                                             </table>
                                         {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="content3" role="tabpanel" aria-labelledby="tab3">
+<!--                        <h2 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h2>-->
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h4 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h4>
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <img src="static/images/{{ test['model_number'] }}.png" alt="antenna-image" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                            {% if test["cbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Tilt Value - C Band</h2>
+                                            <p style="text-align: center;">({{ test["cband_freq"] }}) GHz</p>
+                                            <label for="acl-input">Enter ACL (feet):</label>
+                                            <input type="text" id="acl-input-tilt-cband" class="form-control">
+                                            <label for="acl-input">Enter Lower 3dB Point (feet):</label>
+                                            <input type="text" id="lower-3db-tilt-val-cband" class="form-control">
+                                            <button onclick="calculateTiltCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-tilt-cband"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["fbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Tilt Value - F Band</h2>
+                                            <p style="text-align: center;">({{ test["fband_freq"] }}) GHz</p>
+                                            <label for="acl-input">Enter ACL (feet):</label>
+                                            <input type="text" id="acl-input-tilt-fband" class="form-control">
+                                            <label for="acl-input">Enter Lower 3dB point (feet):</label>
+                                            <input type="text" id="lower-3db-tilt-val-fband" class="form-control">
+                                            <button onclick="calculateTiltFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-tilt-fband"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["high_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Tilt Value - High Band</h2>
+                                            <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
+                                            <label for="acl-input">Enter ACL (feet):</label>
+                                            <input type="text" id="acl-input-tilt" class="form-control">
+                                            <label for="acl-input">Enter Lower 3dB point (feet):</label>
+                                            <input type="text" id="lower-3db-tilt-val" class="form-control">
+                                            <button onclick="calculateTiltHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-tilt"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["low_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            <h2 style="text-align: center;">Calculate Tilt Value - Low Band</h2>
+                                            <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
+                                            <label for="acl-input">Enter ACL (feet):</label>
+                                            <input type="text" id="acl-input-tilt-low" class="form-control">
+                                            <label for="acl-input">Enter Lower 3dB Point (feet):</label>
+                                            <input type="text" id="lower-3db-tilt-val-low" class="form-control">
+                                            <button onclick="calculateTiltLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <p style="margin-top: 10px;" id="lower-3db-tilt-low"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="col-md-4">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h3 style="display: block; text-align: center;">Patterns</h3>
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-6">
+                                <div class="card shadow">
+                                    <div class="card-body d-flex justify-content-center">
+                                        <img src="static/images/{{ test['model_number'] }}_pattern.png" alt="image1" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="content4" role="tabpanel" aria-labelledby="tab4">
+<!--                        <h2 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h2>-->
+                        <div class="row">
+                            <div class="col-md-2">
+                                <h4 style="margin-top: 10px; text-align: center; font-family: 'Nunito Sans', sans-serif;">{{ test["model_number"] }}</h4>
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <img src="static/images/{{ test['model_number'] }}.png" alt="antenna-image" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                            {% if test["cbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            {% if ver_beam_10db_c %}
+                                                <h2 style="text-align: center;">Calculate 10dB Points - C Band</h2>
+                                                <p style="text-align: center;">({{ test["cband_freq"] }}) GHz</p>
+                                                <label for="acl-input">Enter ACL (feet):</label>
+                                                <input type="text" id="acl-input-10db-c" class="form-control">
+                                                <label for="acl-input">Select Tilt Range:</label>
+                                                <select id="tilt-select-10db-c" class="form-control">
+                                                    {% for i in range(from_c_band, to_c_band + 1) %}
+                                                        <option value="{{ i }}">{{ i }}&deg;</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button onclick="calculate10dBDistanceCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <p style="margin-top: 10px;" id="lower-10db-c"></p>
+                                                <p id="upper-10db-c"></p>
+                                                <p id="main-lobe-10db-c"></p>
+                                            {% else %}
+                                                <h3>Missing 10dB Data</h3>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["fbeam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            {% if ver_beam_10db_f %}
+                                                <h2 style="text-align: center;">Calculate 10dB Points - F Band</h2>
+                                                <p style="text-align: center;">({{ test["fband_freq"] }}) GHz</p>
+                                                <label for="acl-input">Enter ACL (feet):</label>
+                                                <input type="text" id="acl-input-10db-f" class="form-control">
+                                                <label for="acl-input">Select Tilt Range:</label>
+                                                <select id="tilt-select-10db-f" class="form-control">
+                                                    {% for i in range(from_f_band, to_f_band + 1) %}
+                                                        <option value="{{ i }}">{{ i }}&deg;</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button onclick="calculate10dBDistanceFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <p style="margin-top: 10px;" id="lower-10db-f"></p>
+                                                <p id="upper-10db-f"></p>
+                                                <p id="main-lobe-10db-f"></p>
+                                            {% else %}
+                                                <h3>Missing 10dB Data</h3>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["high_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            {% if ver_beam_10db_h %}
+                                                <h2 style="text-align: center;">Calculate 10dB Points - High Band</h2>
+                                                <p style="text-align: center;">({{ test["high_band_freq"] }}) MHz</p>
+                                                <label for="acl-input">Enter ACL (feet):</label>
+                                                <input type="text" id="acl-input-10db" class="form-control">
+                                                <label for="acl-input">Select Tilt Range:</label>
+                                                <select id="tilt-select-10db" class="form-control">
+                                                    {% for i in range(from_high_band, to_high_band + 1) %}
+                                                        <option value="{{ i }}">{{ i }}&deg;</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button onclick="calculate10dBDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <p style="margin-top: 10px;" id="lower-10db"></p>
+                                                <p id="upper-10db"></p>
+                                                <p id="main-lobe-10db"></p>
+                                            {% else %}
+                                                <h3>Missing 10dB Data</h3>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if test["low_beam_count"] %}
+                                <div class="col-md-2">
+                                    <div class="card shadow">
+                                        <div class="card-body">
+                                            {% if ver_beam_10db_l %}
+                                                <h2 style="text-align: center;">Calculate 10dB Points - Low Band</h2>
+                                                <p style="text-align: center;">({{ test["low_band_freq"] }}) MHz</p>
+                                                <label for="acl-input">Enter ACL (feet):</label>
+                                                <input type="text" id="acl-input-10db-low" class="form-control">
+                                                <label for="acl-input">Select Tilt Range:</label>
+                                                <select id="tilt-select-10db-low" class="form-control">
+                                                    {% for i in range(from_low_band, to_low_band + 1) %}
+                                                        <option value="{{ i }}">{{ i }}&deg;</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button onclick="calculate10dBDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <p style="margin-top: 10px;" id="lower-10db-low"></p>
+                                                <p id="upper-10db-low"></p>
+                                                <p id="main-lobe-10db-low"></p>
+                                            {% else %}
+                                                <h3>Missing 10dB Data</h3>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="col-md-4">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <img id="image2" src="static/images/real-beamtilt-10db.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h3 style="display: block; text-align: center;">Patterns</h3>
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-6">
+                                <div class="card shadow">
+                                    <div class="card-body d-flex justify-content-center">
+                                        <img src="static/images/{{ test['model_number'] }}_pattern.png" alt="image1" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -505,9 +741,10 @@
 
         // Modify the existing image with the modified canvas
         var newImageSrc = canvas.toDataURL();
-
+        console.log('first image url');
+        console.log(newImageSrc);
         // Replace the existing image with the modified image
-        var existingImage = document.querySelector(".col-md-4 img");
+        var existingImage = document.getElementById("image1");
         existingImage.src = newImageSrc;
       };
     image.src = imageUrl;
@@ -868,6 +1105,937 @@
       };
     image.src = imageUrl;
     }
+
+    // Tilt Value Calculation Functions
+
+    function calculateTiltHighBand() {
+      var H = parseInt(document.getElementById('acl-input-tilt').value);
+      var l3db = parseInt(document.getElementById('lower-3db-tilt-val').value)
+      var BDegrees = {{ ver_beam_high }}; // Assuming you have a value for ver_beam_high
+
+      var B = BDegrees * Math.PI / 180;
+
+      a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+
+      document.getElementById('lower-3db-tilt').innerHTML = `Tilt: ${a} degrees`;
+<!--      // Create an image object-->
+<!--      var image = new Image();-->
+
+<!--      // Set the image source-->
+<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+
+<!--      // When the image is loaded-->
+<!--      image.onload = function() {-->
+<!--        // Create a canvas element-->
+<!--        var canvas = document.createElement("canvas");-->
+<!--        var context = canvas.getContext("2d");-->
+
+<!--        // Set the canvas size to match the image size-->
+<!--        canvas.width = image.width;-->
+<!--        canvas.height = image.height;-->
+
+<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+
+<!--        // Draw the image on the canvas-->
+<!--        context.drawImage(image, 0, 0);-->
+
+<!--        // Set the text style-->
+<!--        context.font = "20px Arial";-->
+<!--        context.fillStyle = "black";-->
+
+<!--        var bandType = "(High Band)";-->
+<!--        context.fillText(bandType, 100, 200);-->
+
+<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
+<!--        context.fillText(bandFreq, 90, 240);-->
+
+
+<!--        // Define the text content and position-->
+<!--        var height = `${H} feet`;-->
+<!--        var x = 430;-->
+<!--        var y = 55;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(height, x, y);-->
+
+<!--        var downtilt = `${aDegrees}°`;-->
+<!--        var x2 = 430;-->
+<!--        var y2 = 102;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(downtilt, x2, y2);-->
+
+<!--        var beamwidth = `${BDegrees}°`;-->
+<!--        var x3 = 430;-->
+<!--        var y3 = 149;-->
+
+
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(beamwidth, x3, y3);-->
+
+
+<!--        var upper3db = `${miles_upperdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db, 420, 240);-->
+
+<!--        var lower3db = `${miles_lowerdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db, 320, 580);-->
+
+<!--        var lower3db_display = `${miles_lowerdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db_display, 440, 663);-->
+
+<!--        var upper3db_display = `${miles_upperdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db_display, 440, 712);-->
+
+<!--        var mainlobe_display = `${miles_mainlobe}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(mainlobe_display, 350, 760);-->
+
+<!--        var horizon_display = `${horizon}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(horizon, 320, 804);-->
+
+<!--        // Modify the existing image with the modified canvas-->
+<!--        var newImageSrc = canvas.toDataURL();-->
+
+<!--        // Replace the existing image with the modified image-->
+<!--        var existingImage = document.querySelector(".col-md-4 img");-->
+<!--        existingImage.src = newImageSrc;-->
+<!--      };-->
+<!--    image.src = imageUrl;-->
+    }
+    function calculateTiltCBand() {
+      var H = parseInt(document.getElementById('acl-input-tilt-cband').value);
+      var l3db = parseInt(document.getElementById('lower-3db-tilt-val-cband').value)
+      var BDegrees = {{ ver_beam_c }}; // Assuming you have a value for ver_beam_high
+
+      var B = BDegrees * Math.PI / 180;
+
+      a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+
+      document.getElementById('lower-3db-tilt-cband').innerHTML = `Tilt: ${a} degrees`;
+<!--      // Create an image object-->
+<!--      var image = new Image();-->
+
+<!--      // Set the image source-->
+<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+
+<!--      // When the image is loaded-->
+<!--      image.onload = function() {-->
+<!--        // Create a canvas element-->
+<!--        var canvas = document.createElement("canvas");-->
+<!--        var context = canvas.getContext("2d");-->
+
+<!--        // Set the canvas size to match the image size-->
+<!--        canvas.width = image.width;-->
+<!--        canvas.height = image.height;-->
+
+<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+
+<!--        // Draw the image on the canvas-->
+<!--        context.drawImage(image, 0, 0);-->
+
+<!--        // Set the text style-->
+<!--        context.font = "20px Arial";-->
+<!--        context.fillStyle = "black";-->
+
+<!--        var bandType = "(High Band)";-->
+<!--        context.fillText(bandType, 100, 200);-->
+
+<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
+<!--        context.fillText(bandFreq, 90, 240);-->
+
+
+<!--        // Define the text content and position-->
+<!--        var height = `${H} feet`;-->
+<!--        var x = 430;-->
+<!--        var y = 55;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(height, x, y);-->
+
+<!--        var downtilt = `${aDegrees}°`;-->
+<!--        var x2 = 430;-->
+<!--        var y2 = 102;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(downtilt, x2, y2);-->
+
+<!--        var beamwidth = `${BDegrees}°`;-->
+<!--        var x3 = 430;-->
+<!--        var y3 = 149;-->
+
+
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(beamwidth, x3, y3);-->
+
+
+<!--        var upper3db = `${miles_upperdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db, 420, 240);-->
+
+<!--        var lower3db = `${miles_lowerdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db, 320, 580);-->
+
+<!--        var lower3db_display = `${miles_lowerdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db_display, 440, 663);-->
+
+<!--        var upper3db_display = `${miles_upperdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db_display, 440, 712);-->
+
+<!--        var mainlobe_display = `${miles_mainlobe}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(mainlobe_display, 350, 760);-->
+
+<!--        var horizon_display = `${horizon}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(horizon, 320, 804);-->
+
+<!--        // Modify the existing image with the modified canvas-->
+<!--        var newImageSrc = canvas.toDataURL();-->
+
+<!--        // Replace the existing image with the modified image-->
+<!--        var existingImage = document.querySelector(".col-md-4 img");-->
+<!--        existingImage.src = newImageSrc;-->
+<!--      };-->
+<!--    image.src = imageUrl;-->
+    }
+    function calculateTiltLowBand() {
+      var H = parseInt(document.getElementById('acl-input-tilt-low').value);
+      var l3db = parseInt(document.getElementById('lower-3db-tilt-val-low').value)
+      var BDegrees = {{ ver_beam_low }}; // Assuming you have a value for ver_beam_high
+
+      var B = BDegrees * Math.PI / 180;
+
+      a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+
+      document.getElementById('lower-3db-tilt-low').innerHTML = `Tilt: ${a} degrees`;
+<!--      // Create an image object-->
+<!--      var image = new Image();-->
+
+<!--      // Set the image source-->
+<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+
+<!--      // When the image is loaded-->
+<!--      image.onload = function() {-->
+<!--        // Create a canvas element-->
+<!--        var canvas = document.createElement("canvas");-->
+<!--        var context = canvas.getContext("2d");-->
+
+<!--        // Set the canvas size to match the image size-->
+<!--        canvas.width = image.width;-->
+<!--        canvas.height = image.height;-->
+
+<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+
+<!--        // Draw the image on the canvas-->
+<!--        context.drawImage(image, 0, 0);-->
+
+<!--        // Set the text style-->
+<!--        context.font = "20px Arial";-->
+<!--        context.fillStyle = "black";-->
+
+<!--        var bandType = "(High Band)";-->
+<!--        context.fillText(bandType, 100, 200);-->
+
+<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
+<!--        context.fillText(bandFreq, 90, 240);-->
+
+
+<!--        // Define the text content and position-->
+<!--        var height = `${H} feet`;-->
+<!--        var x = 430;-->
+<!--        var y = 55;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(height, x, y);-->
+
+<!--        var downtilt = `${aDegrees}°`;-->
+<!--        var x2 = 430;-->
+<!--        var y2 = 102;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(downtilt, x2, y2);-->
+
+<!--        var beamwidth = `${BDegrees}°`;-->
+<!--        var x3 = 430;-->
+<!--        var y3 = 149;-->
+
+
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(beamwidth, x3, y3);-->
+
+
+<!--        var upper3db = `${miles_upperdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db, 420, 240);-->
+
+<!--        var lower3db = `${miles_lowerdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db, 320, 580);-->
+
+<!--        var lower3db_display = `${miles_lowerdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db_display, 440, 663);-->
+
+<!--        var upper3db_display = `${miles_upperdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db_display, 440, 712);-->
+
+<!--        var mainlobe_display = `${miles_mainlobe}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(mainlobe_display, 350, 760);-->
+
+<!--        var horizon_display = `${horizon}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(horizon, 320, 804);-->
+
+<!--        // Modify the existing image with the modified canvas-->
+<!--        var newImageSrc = canvas.toDataURL();-->
+
+<!--        // Replace the existing image with the modified image-->
+<!--        var existingImage = document.querySelector(".col-md-4 img");-->
+<!--        existingImage.src = newImageSrc;-->
+<!--      };-->
+<!--    image.src = imageUrl;-->
+    }
+
+    function calculateTiltFBand() {
+      var H = parseInt(document.getElementById('acl-input-tilt-fband').value);
+      var l3db = parseInt(document.getElementById('lower-3db-tilt-val-fband').value)
+      var BDegrees = {{ ver_beam_f }}; // Assuming you have a value for ver_beam_high
+
+      var B = BDegrees * Math.PI / 180;
+
+      a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+
+      document.getElementById('lower-3db-tilt-fband').innerHTML = `Tilt: ${a} degrees`;
+<!--      // Create an image object-->
+<!--      var image = new Image();-->
+
+<!--      // Set the image source-->
+<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+
+<!--      // When the image is loaded-->
+<!--      image.onload = function() {-->
+<!--        // Create a canvas element-->
+<!--        var canvas = document.createElement("canvas");-->
+<!--        var context = canvas.getContext("2d");-->
+
+<!--        // Set the canvas size to match the image size-->
+<!--        canvas.width = image.width;-->
+<!--        canvas.height = image.height;-->
+
+<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+
+<!--        // Draw the image on the canvas-->
+<!--        context.drawImage(image, 0, 0);-->
+
+<!--        // Set the text style-->
+<!--        context.font = "20px Arial";-->
+<!--        context.fillStyle = "black";-->
+
+<!--        var bandType = "(High Band)";-->
+<!--        context.fillText(bandType, 100, 200);-->
+
+<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
+<!--        context.fillText(bandFreq, 90, 240);-->
+
+
+<!--        // Define the text content and position-->
+<!--        var height = `${H} feet`;-->
+<!--        var x = 430;-->
+<!--        var y = 55;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(height, x, y);-->
+
+<!--        var downtilt = `${aDegrees}°`;-->
+<!--        var x2 = 430;-->
+<!--        var y2 = 102;-->
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(downtilt, x2, y2);-->
+
+<!--        var beamwidth = `${BDegrees}°`;-->
+<!--        var x3 = 430;-->
+<!--        var y3 = 149;-->
+
+
+
+
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(beamwidth, x3, y3);-->
+
+
+<!--        var upper3db = `${miles_upperdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db, 420, 240);-->
+
+<!--        var lower3db = `${miles_lowerdb} ft`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db, 320, 580);-->
+
+<!--        var lower3db_display = `${miles_lowerdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(lower3db_display, 440, 663);-->
+
+<!--        var upper3db_display = `${miles_upperdb}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(upper3db_display, 440, 712);-->
+
+<!--        var mainlobe_display = `${miles_mainlobe}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(mainlobe_display, 350, 760);-->
+
+<!--        var horizon_display = `${horizon}`;-->
+<!--        // Add the text to the canvas-->
+<!--        context.fillText(horizon, 320, 804);-->
+
+<!--        // Modify the existing image with the modified canvas-->
+<!--        var newImageSrc = canvas.toDataURL();-->
+
+<!--        // Replace the existing image with the modified image-->
+<!--        var existingImage = document.querySelector(".col-md-4 img");-->
+<!--        existingImage.src = newImageSrc;-->
+<!--      };-->
+<!--    image.src = imageUrl;-->
+    }
+
+    // Calculating 10dB Distance
+
+    function calculate10dBDistanceHighBand() {
+      var H = parseInt(document.getElementById('acl-input-10db').value);
+      var aSelect = document.getElementById('tilt-select-10db');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_10db_h }}; // Assuming you have a value for ver_beam_high
+
+      var H_miles = H;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
+      var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
+
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
+      var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
+
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
+      var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
+
+
+      console.log(miles_mainlobe);
+      console.log(km_mainlobe);
+
+      var horizon = Math.sqrt(2 * H).toFixed(3);
+      console.log(horizon);
+
+      document.getElementById('lower-10db').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-10db').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-10db').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
+
+      // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt-10db.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(High Band)";
+        context.fillText(bandType, 100, 200);
+
+        var bandFreq = "{{ high_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
+
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+
+        var upper3db = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb}`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb}`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe}`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+        console.log(newImageSrc);
+
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById("image2");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
+    function calculate10dBDistanceLowBand() {
+      var H = parseInt(document.getElementById('acl-input-10db-low').value);
+      var aSelect = document.getElementById('tilt-select-10db-low');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_10db_l }}; // Assuming you have a value for ver_beam_high
+
+      var H_miles = H;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
+      var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
+
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
+      var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
+
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
+      var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
+
+
+      console.log(miles_mainlobe);
+      console.log(km_mainlobe);
+
+      var horizon = Math.sqrt(2 * H).toFixed(3);
+      console.log(horizon);
+
+      document.getElementById('lower-10db-low').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-10db-low').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-10db-low').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
+
+      // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt-10db.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(Low Band)";
+        context.fillText(bandType, 100, 200);
+
+        var bandFreq = "{{ low_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
+
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+
+        var upper3db = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe} ft`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+        console.log(newImageSrc);
+
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById("image2");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
+    function calculate10dBDistanceCBand() {
+      var H = parseInt(document.getElementById('acl-input-10db-c').value);
+      var aSelect = document.getElementById('tilt-select-10db-c');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_10db_c }}; // Assuming you have a value for ver_beam_high
+
+      var H_miles = H;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
+      var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
+
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
+      var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
+
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
+      var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
+
+
+      console.log(miles_mainlobe);
+      console.log(km_mainlobe);
+
+      var horizon = Math.sqrt(2 * H).toFixed(3);
+      console.log(horizon);
+
+      document.getElementById('lower-10db-c').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-10db-c').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-10db-c').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
+
+      // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt-10db.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(C Band)";
+        context.fillText(bandType, 100, 200);
+
+        var bandFreq = "{{ c_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
+
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+
+        var upper3db = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe} ft`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+        console.log(newImageSrc);
+
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById("image2");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
+    function calculate10dBDistanceFBand() {
+      var H = parseInt(document.getElementById('acl-input-10db-f').value);
+      var aSelect = document.getElementById('tilt-select-10db-f');
+      var aDegrees = parseInt(aSelect.options[aSelect.selectedIndex].value);
+      var BDegrees = {{ ver_beam_10db_f }}; // Assuming you have a value for ver_beam_high
+
+      var H_miles = H;
+      var H_km = H * 0.3048 / 1000;
+
+      var a = aDegrees * Math.PI / 180;
+      var B = BDegrees * Math.PI / 180;
+
+      var miles_lowerdb = Math.round(Math.abs((H_miles / Math.tan((B / 2 + a)))));
+      var km_lowerdb = Math.abs((H_km / Math.tan((B / 2 + a)))).toFixed(3);
+
+      var miles_upperdb = Math.round(Math.abs((H_miles / Math.tan((a - B / 2)))));
+      var km_upperdb = Math.abs((H_km / Math.tan((a - B / 2)))).toFixed(3);
+
+      var miles_mainlobe = Math.round(Math.abs((H_miles / Math.tan((a)))));
+      var km_mainlobe = Math.abs((H_km / Math.tan((a)))).toFixed(3);
+
+
+      console.log(miles_mainlobe);
+      console.log(km_mainlobe);
+
+      var horizon = Math.sqrt(2 * H).toFixed(3);
+      console.log(horizon);
+
+      document.getElementById('lower-10db-f').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
+      document.getElementById('upper-10db-f').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
+      document.getElementById('main-lobe-10db-f').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
+
+      // Create an image object
+      var image = new Image();
+
+      // Set the image source
+      var imageUrl = "static/images/real-beamtilt-10db.jpg";
+
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
+
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
+
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
+
+        var bandType = "(F Band)";
+        context.fillText(bandType, 100, 200);
+
+        var bandFreq = "{{ f_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
+
+
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
+
+
+        // Add the text to the canvas
+        context.fillText(height, x, y);
+
+        var downtilt = `${aDegrees}°`;
+        var x2 = 430;
+        var y2 = 102;
+
+
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+
+
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
+
+
+        var upper3db = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db, 420, 240);
+
+        var lower3db = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db, 320, 580);
+
+        var lower3db_display = `${miles_lowerdb} ft`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 440, 663);
+
+        var upper3db_display = `${miles_upperdb} ft`;
+        // Add the text to the canvas
+        context.fillText(upper3db_display, 440, 712);
+
+        var mainlobe_display = `${miles_mainlobe} ft`;
+        // Add the text to the canvas
+        context.fillText(mainlobe_display, 350, 760);
+
+        var horizon_display = `${horizon}`;
+        // Add the text to the canvas
+        context.fillText(horizon, 320, 804);
+
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+        console.log(newImageSrc);
+
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById("image2");
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
+    }
+
 
     </script>
 </body>
