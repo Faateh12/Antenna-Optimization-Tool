@@ -464,7 +464,7 @@
                             <div class="col-md-4">
                                 <div class="card shadow">
                                     <div class="card-body">
-                                        <img src="static/images/real-beamtilt.jpg" alt="Visual" style="max-width: 100%; height: auto;">
+                                        <img id="image3" src="static/images/beamtilt-pic-1.jpg" alt="Visual" style="max-width: 100%; height: auto;">
                                     </div>
                                 </div>
                             </div>
@@ -1119,98 +1119,75 @@
 
 
       document.getElementById('lower-3db-tilt').innerHTML = `Tilt: ${a} degrees`;
-<!--      // Create an image object-->
-<!--      var image = new Image();-->
+      // Create an image object
+      var image = new Image();
 
-<!--      // Set the image source-->
-<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+      // Set the image source
+      var imageUrl = "static/images/beamtilt-pic-1.jpg";
 
-<!--      // When the image is loaded-->
-<!--      image.onload = function() {-->
-<!--        // Create a canvas element-->
-<!--        var canvas = document.createElement("canvas");-->
-<!--        var context = canvas.getContext("2d");-->
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
 
-<!--        // Set the canvas size to match the image size-->
-<!--        canvas.width = image.width;-->
-<!--        canvas.height = image.height;-->
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-<!--        // Draw the image on the canvas-->
-<!--        context.drawImage(image, 0, 0);-->
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
 
-<!--        // Set the text style-->
-<!--        context.font = "20px Arial";-->
-<!--        context.fillStyle = "black";-->
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
 
-<!--        var bandType = "(High Band)";-->
-<!--        context.fillText(bandType, 100, 200);-->
+        var bandType = "(High Band)";
+        context.fillText(bandType, 100, 200);
 
-<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
-<!--        context.fillText(bandFreq, 90, 240);-->
-
-
-<!--        // Define the text content and position-->
-<!--        var height = `${H} feet`;-->
-<!--        var x = 430;-->
-<!--        var y = 55;-->
+        var bandFreq = "{{ high_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(height, x, y);-->
-
-<!--        var downtilt = `${aDegrees}°`;-->
-<!--        var x2 = 430;-->
-<!--        var y2 = 102;-->
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(downtilt, x2, y2);-->
+        // Add the text to the canvas
+        context.fillText(height, x, y);
 
-<!--        var beamwidth = `${BDegrees}°`;-->
-<!--        var x3 = 430;-->
-<!--        var y3 = 149;-->
-
-
+        var downtilt = `${a}°`;
+        var x2 = 430;
+        var y2 = 102;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(beamwidth, x3, y3);-->
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
+
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
 
 
-<!--        var upper3db = `${miles_upperdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db, 420, 240);-->
+        var lower3db_display = `${a}°`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 262, 383);
 
-<!--        var lower3db = `${miles_lowerdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db, 320, 580);-->
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
 
-<!--        var lower3db_display = `${miles_lowerdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db_display, 440, 663);-->
-
-<!--        var upper3db_display = `${miles_upperdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db_display, 440, 712);-->
-
-<!--        var mainlobe_display = `${miles_mainlobe}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(mainlobe_display, 350, 760);-->
-
-<!--        var horizon_display = `${horizon}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(horizon, 320, 804);-->
-
-<!--        // Modify the existing image with the modified canvas-->
-<!--        var newImageSrc = canvas.toDataURL();-->
-
-<!--        // Replace the existing image with the modified image-->
-<!--        var existingImage = document.querySelector(".col-md-4 img");-->
-<!--        existingImage.src = newImageSrc;-->
-<!--      };-->
-<!--    image.src = imageUrl;-->
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById('image3');
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
     }
     function calculateTiltCBand() {
       var H = parseInt(document.getElementById('acl-input-tilt-cband').value);
@@ -1223,98 +1200,80 @@
 
 
       document.getElementById('lower-3db-tilt-cband').innerHTML = `Tilt: ${a} degrees`;
-<!--      // Create an image object-->
-<!--      var image = new Image();-->
+      // Create an image object
+      var image = new Image();
 
-<!--      // Set the image source-->
-<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+      // Set the image source
+      var imageUrl = "static/images/beamtilt-pic-1.jpg";
 
-<!--      // When the image is loaded-->
-<!--      image.onload = function() {-->
-<!--        // Create a canvas element-->
-<!--        var canvas = document.createElement("canvas");-->
-<!--        var context = canvas.getContext("2d");-->
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
 
-<!--        // Set the canvas size to match the image size-->
-<!--        canvas.width = image.width;-->
-<!--        canvas.height = image.height;-->
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-<!--        // Draw the image on the canvas-->
-<!--        context.drawImage(image, 0, 0);-->
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
 
-<!--        // Set the text style-->
-<!--        context.font = "20px Arial";-->
-<!--        context.fillStyle = "black";-->
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
 
-<!--        var bandType = "(High Band)";-->
-<!--        context.fillText(bandType, 100, 200);-->
+        var bandType = "(C Band)";
+        context.fillText(bandType, 100, 200);
 
-<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
-<!--        context.fillText(bandFreq, 90, 240);-->
-
-
-<!--        // Define the text content and position-->
-<!--        var height = `${H} feet`;-->
-<!--        var x = 430;-->
-<!--        var y = 55;-->
+        var bandFreq = "{{ c_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(height, x, y);-->
-
-<!--        var downtilt = `${aDegrees}°`;-->
-<!--        var x2 = 430;-->
-<!--        var y2 = 102;-->
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(downtilt, x2, y2);-->
+        // Add the text to the canvas
+        context.fillText(height, x, y);
 
-<!--        var beamwidth = `${BDegrees}°`;-->
-<!--        var x3 = 430;-->
-<!--        var y3 = 149;-->
-
-
+        var downtilt = `${a}°`;
+        var x2 = 430;
+        var y2 = 102;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(beamwidth, x3, y3);-->
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
 
 
-<!--        var upper3db = `${miles_upperdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db, 420, 240);-->
 
-<!--        var lower3db = `${miles_lowerdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db, 320, 580);-->
 
-<!--        var lower3db_display = `${miles_lowerdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db_display, 440, 663);-->
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
 
-<!--        var upper3db_display = `${miles_upperdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db_display, 440, 712);-->
 
-<!--        var mainlobe_display = `${miles_mainlobe}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(mainlobe_display, 350, 760);-->
 
-<!--        var horizon_display = `${horizon}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(horizon, 320, 804);-->
+        var lower3db_display = `${a}°`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 262, 383);
 
-<!--        // Modify the existing image with the modified canvas-->
-<!--        var newImageSrc = canvas.toDataURL();-->
 
-<!--        // Replace the existing image with the modified image-->
-<!--        var existingImage = document.querySelector(".col-md-4 img");-->
-<!--        existingImage.src = newImageSrc;-->
-<!--      };-->
-<!--    image.src = imageUrl;-->
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
+
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById('image3');
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
     }
     function calculateTiltLowBand() {
       var H = parseInt(document.getElementById('acl-input-tilt-low').value);
@@ -1327,98 +1286,78 @@
 
 
       document.getElementById('lower-3db-tilt-low').innerHTML = `Tilt: ${a} degrees`;
-<!--      // Create an image object-->
-<!--      var image = new Image();-->
+      // Create an image object
+      var image = new Image();
 
-<!--      // Set the image source-->
-<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+      // Set the image source
+      var imageUrl = "static/images/beamtilt-pic-1.jpg";
 
-<!--      // When the image is loaded-->
-<!--      image.onload = function() {-->
-<!--        // Create a canvas element-->
-<!--        var canvas = document.createElement("canvas");-->
-<!--        var context = canvas.getContext("2d");-->
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
 
-<!--        // Set the canvas size to match the image size-->
-<!--        canvas.width = image.width;-->
-<!--        canvas.height = image.height;-->
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-<!--        // Draw the image on the canvas-->
-<!--        context.drawImage(image, 0, 0);-->
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
 
-<!--        // Set the text style-->
-<!--        context.font = "20px Arial";-->
-<!--        context.fillStyle = "black";-->
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
 
-<!--        var bandType = "(High Band)";-->
-<!--        context.fillText(bandType, 100, 200);-->
+        var bandType = "(Low Band)";
+        context.fillText(bandType, 100, 200);
 
-<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
-<!--        context.fillText(bandFreq, 90, 240);-->
-
-
-<!--        // Define the text content and position-->
-<!--        var height = `${H} feet`;-->
-<!--        var x = 430;-->
-<!--        var y = 55;-->
+        var bandFreq = "{{ low_band_freq }} MHz";
+        context.fillText(bandFreq, 90, 240);
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(height, x, y);-->
-
-<!--        var downtilt = `${aDegrees}°`;-->
-<!--        var x2 = 430;-->
-<!--        var y2 = 102;-->
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(downtilt, x2, y2);-->
+        // Add the text to the canvas
+        context.fillText(height, x, y);
 
-<!--        var beamwidth = `${BDegrees}°`;-->
-<!--        var x3 = 430;-->
-<!--        var y3 = 149;-->
-
-
+        var downtilt = `${a}°`;
+        var x2 = 430;
+        var y2 = 102;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(beamwidth, x3, y3);-->
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
 
 
-<!--        var upper3db = `${miles_upperdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db, 420, 240);-->
 
-<!--        var lower3db = `${miles_lowerdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db, 320, 580);-->
 
-<!--        var lower3db_display = `${miles_lowerdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db_display, 440, 663);-->
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
 
-<!--        var upper3db_display = `${miles_upperdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db_display, 440, 712);-->
 
-<!--        var mainlobe_display = `${miles_mainlobe}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(mainlobe_display, 350, 760);-->
+        var lower3db_display = `${a}°`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 262, 383);
 
-<!--        var horizon_display = `${horizon}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(horizon, 320, 804);-->
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
 
-<!--        // Modify the existing image with the modified canvas-->
-<!--        var newImageSrc = canvas.toDataURL();-->
-
-<!--        // Replace the existing image with the modified image-->
-<!--        var existingImage = document.querySelector(".col-md-4 img");-->
-<!--        existingImage.src = newImageSrc;-->
-<!--      };-->
-<!--    image.src = imageUrl;-->
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById('image3');
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
     }
 
     function calculateTiltFBand() {
@@ -1432,98 +1371,77 @@
 
 
       document.getElementById('lower-3db-tilt-fband').innerHTML = `Tilt: ${a} degrees`;
-<!--      // Create an image object-->
-<!--      var image = new Image();-->
+      // Create an image object
+      var image = new Image();
 
-<!--      // Set the image source-->
-<!--      var imageUrl = "static/images/real-beamtilt.jpg";-->
+      // Set the image source
+      var imageUrl = "static/images/beamtilt-pic-1.jpg";
 
-<!--      // When the image is loaded-->
-<!--      image.onload = function() {-->
-<!--        // Create a canvas element-->
-<!--        var canvas = document.createElement("canvas");-->
-<!--        var context = canvas.getContext("2d");-->
+      // When the image is loaded
+      image.onload = function() {
+        // Create a canvas element
+        var canvas = document.createElement("canvas");
+        var context = canvas.getContext("2d");
 
-<!--        // Set the canvas size to match the image size-->
-<!--        canvas.width = image.width;-->
-<!--        canvas.height = image.height;-->
+        // Set the canvas size to match the image size
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-<!--        context.clearRect(0, 0, canvas.width, canvas.height);-->
+        context.clearRect(0, 0, canvas.width, canvas.height);
 
-<!--        // Draw the image on the canvas-->
-<!--        context.drawImage(image, 0, 0);-->
+        // Draw the image on the canvas
+        context.drawImage(image, 0, 0);
 
-<!--        // Set the text style-->
-<!--        context.font = "20px Arial";-->
-<!--        context.fillStyle = "black";-->
+        // Set the text style
+        context.font = "20px Arial";
+        context.fillStyle = "black";
 
-<!--        var bandType = "(High Band)";-->
-<!--        context.fillText(bandType, 100, 200);-->
+        var bandType = "(F Band)";
+        context.fillText(bandType, 100, 200);
 
-<!--        var bandFreq = "{{ high_band_freq }} MHz";-->
-<!--        context.fillText(bandFreq, 90, 240);-->
-
-
-<!--        // Define the text content and position-->
-<!--        var height = `${H} feet`;-->
-<!--        var x = 430;-->
-<!--        var y = 55;-->
+        var bandFreq = "{{ f_band_freq }} GHz";
+        context.fillText(bandFreq, 90, 240);
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(height, x, y);-->
-
-<!--        var downtilt = `${aDegrees}°`;-->
-<!--        var x2 = 430;-->
-<!--        var y2 = 102;-->
+        // Define the text content and position
+        var height = `${H} feet`;
+        var x = 430;
+        var y = 55;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(downtilt, x2, y2);-->
+        // Add the text to the canvas
+        context.fillText(height, x, y);
 
-<!--        var beamwidth = `${BDegrees}°`;-->
-<!--        var x3 = 430;-->
-<!--        var y3 = 149;-->
-
-
+        var downtilt = `${a}°`;
+        var x2 = 430;
+        var y2 = 102;
 
 
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(beamwidth, x3, y3);-->
+        // Add the text to the canvas
+        context.fillText(downtilt, x2, y2);
+
+        var beamwidth = `${BDegrees}°`;
+        var x3 = 430;
+        var y3 = 149;
 
 
-<!--        var upper3db = `${miles_upperdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db, 420, 240);-->
 
-<!--        var lower3db = `${miles_lowerdb} ft`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db, 320, 580);-->
+        // Add the text to the canvas
+        context.fillText(beamwidth, x3, y3);
 
-<!--        var lower3db_display = `${miles_lowerdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(lower3db_display, 440, 663);-->
 
-<!--        var upper3db_display = `${miles_upperdb}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(upper3db_display, 440, 712);-->
+        var lower3db_display = `${a}°`;
+        // Add the text to the canvas
+        context.fillText(lower3db_display, 262, 383);
 
-<!--        var mainlobe_display = `${miles_mainlobe}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(mainlobe_display, 350, 760);-->
+        // Modify the existing image with the modified canvas
+        var newImageSrc = canvas.toDataURL();
 
-<!--        var horizon_display = `${horizon}`;-->
-<!--        // Add the text to the canvas-->
-<!--        context.fillText(horizon, 320, 804);-->
-
-<!--        // Modify the existing image with the modified canvas-->
-<!--        var newImageSrc = canvas.toDataURL();-->
-
-<!--        // Replace the existing image with the modified image-->
-<!--        var existingImage = document.querySelector(".col-md-4 img");-->
-<!--        existingImage.src = newImageSrc;-->
-<!--      };-->
-<!--    image.src = imageUrl;-->
+        // Replace the existing image with the modified image
+        var existingImage = document.getElementById('image3');
+        existingImage.src = newImageSrc;
+      };
+    image.src = imageUrl;
     }
 
     // Calculating 10dB Distance
