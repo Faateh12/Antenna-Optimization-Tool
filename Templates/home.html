@@ -68,6 +68,10 @@
         h3, label {
             font-family: 'Montserrat', sans-serif;
         }
+
+        p {
+            font-family: 'Montserrat', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -197,6 +201,7 @@
                                                 {% endfor %}
                                             </select>
                                             <button onclick="calculateDistanceCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-c-1" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-cband"></p>
                                             <p id="upper-3db-cband"></p>
                                             <p id="main-lobe-cband"></p>
@@ -219,6 +224,7 @@
                                                 {% endfor %}
                                             </select>
                                             <button onclick="calculateDistanceFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-f-1" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-fband"></p>
                                             <p id="upper-3db-fband"></p>
                                             <p id="main-lobe-fband"></p>
@@ -241,6 +247,7 @@
                                                 {% endfor %}
                                             </select>
                                             <button onclick="calculateDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-h-1" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db"></p>
                                             <p id="upper-3db"></p>
                                             <p id="main-lobe"></p>
@@ -263,6 +270,7 @@
                                                 {% endfor %}
                                             </select>
                                             <button onclick="calculateDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-l-1" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-lowband"></p>
                                             <p id="upper-3db-lowband"></p>
                                             <p id="main-lobe-lowband"></p>
@@ -408,6 +416,7 @@
                                             <label for="acl-input">Enter Lower 3dB Point (feet):</label>
                                             <input type="text" id="lower-3db-tilt-val-cband" class="form-control">
                                             <button onclick="calculateTiltCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-c-2" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-tilt-cband"></p>
                                         </div>
                                     </div>
@@ -424,6 +433,7 @@
                                             <label for="acl-input">Enter Lower 3dB point (feet):</label>
                                             <input type="text" id="lower-3db-tilt-val-fband" class="form-control">
                                             <button onclick="calculateTiltFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-f-2" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-tilt-fband"></p>
                                         </div>
                                     </div>
@@ -440,6 +450,7 @@
                                             <label for="acl-input">Enter Lower 3dB point (feet):</label>
                                             <input type="text" id="lower-3db-tilt-val" class="form-control">
                                             <button onclick="calculateTiltHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-h-2" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-tilt"></p>
                                         </div>
                                     </div>
@@ -456,6 +467,7 @@
                                             <label for="acl-input">Enter Lower 3dB Point (feet):</label>
                                             <input type="text" id="lower-3db-tilt-val-low" class="form-control">
                                             <button onclick="calculateTiltLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                            <hr id="line-l-2" style="display: none;">
                                             <p style="margin-top: 10px;" id="lower-3db-tilt-low"></p>
                                         </div>
                                     </div>
@@ -508,6 +520,7 @@
                                                     {% endfor %}
                                                 </select>
                                                 <button onclick="calculate10dBDistanceCBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <hr id="line-c-3" style="display: none;">
                                                 <p style="margin-top: 10px;" id="lower-10db-c"></p>
                                                 <p id="upper-10db-c"></p>
                                                 <p id="main-lobe-10db-c"></p>
@@ -534,6 +547,7 @@
                                                     {% endfor %}
                                                 </select>
                                                 <button onclick="calculate10dBDistanceFBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <hr id="line-f-3" style="display: none;">
                                                 <p style="margin-top: 10px;" id="lower-10db-f"></p>
                                                 <p id="upper-10db-f"></p>
                                                 <p id="main-lobe-10db-f"></p>
@@ -560,6 +574,7 @@
                                                     {% endfor %}
                                                 </select>
                                                 <button onclick="calculate10dBDistanceHighBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <hr id="line-h-3" style="display: none;">
                                                 <p style="margin-top: 10px;" id="lower-10db"></p>
                                                 <p id="upper-10db"></p>
                                                 <p id="main-lobe-10db"></p>
@@ -586,6 +601,7 @@
                                                     {% endfor %}
                                                 </select>
                                                 <button onclick="calculate10dBDistanceLowBand()" class="btn btn-primary mt-2">Calculate</button>
+                                                <hr id="line-l-3" style="display: none;">
                                                 <p style="margin-top: 10px;" id="lower-10db-low"></p>
                                                 <p id="upper-10db-low"></p>
                                                 <p id="main-lobe-10db-low"></p>
@@ -650,6 +666,9 @@
 
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
+
+      var line = document.getElementById('line-h-1');
+      line.style.display = 'block';
 
       document.getElementById('lower-3db').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-3db').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
@@ -774,6 +793,9 @@
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
 
+      var line = document.getElementById('line-l-1');
+      line.style.display = 'block';
+
       document.getElementById('lower-3db-lowband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-3db-lowband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
       document.getElementById('main-lobe-lowband').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
@@ -892,6 +914,9 @@
 
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
+
+      var line = document.getElementById('line-c-1');
+      line.style.display = 'block';
 
       document.getElementById('lower-3db-cband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-3db-cband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
@@ -1012,6 +1037,9 @@
       var horizon = Math.sqrt(2 * H);
       console.log(horizon);
 
+      var line = document.getElementById('line-f-1');
+      line.style.display = 'block';
+
       document.getElementById('lower-3db-fband').innerHTML = `Lower 3dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-3db-fband').innerHTML = `Upper 3dB point: ${miles_upperdb} ft`;
       document.getElementById('main-lobe-fband').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
@@ -1117,6 +1145,8 @@
 
       a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
 
+      var line = document.getElementById('line-h-2');
+      line.style.display = 'block';
 
       document.getElementById('lower-3db-tilt').innerHTML = `Tilt: ${a} degrees`;
       // Create an image object
@@ -1197,6 +1227,9 @@
       var B = BDegrees * Math.PI / 180;
 
       a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+      var line = document.getElementById('line-c-2');
+      line.style.display = 'block';
 
 
       document.getElementById('lower-3db-tilt-cband').innerHTML = `Tilt: ${a} degrees`;
@@ -1284,6 +1317,9 @@
 
       a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
 
+      var line = document.getElementById('line-l-2');
+      line.style.display = 'block';
+
 
       document.getElementById('lower-3db-tilt-low').innerHTML = `Tilt: ${a} degrees`;
       // Create an image object
@@ -1368,6 +1404,9 @@
       var B = BDegrees * Math.PI / 180;
 
       a = Math.round((Math.atan(H / l3db) - B / 2) * (180 / Math.PI));
+
+      var line = document.getElementById('line-f-2');
+      line.style.display = 'block';
 
 
       document.getElementById('lower-3db-tilt-fband').innerHTML = `Tilt: ${a} degrees`;
@@ -1473,6 +1512,9 @@
 
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
+
+      var line = document.getElementById('line-h-3');
+      line.style.display = 'block';
 
       document.getElementById('lower-10db').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-10db').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
@@ -1601,6 +1643,9 @@
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
 
+      var line = document.getElementById('line-l-3');
+      line.style.display = 'block';
+
       document.getElementById('lower-10db-low').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-10db-low').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
       document.getElementById('main-lobe-10db-low').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
@@ -1728,6 +1773,9 @@
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
 
+      var line = document.getElementById('line-c-3');
+      line.style.display = 'block';
+
       document.getElementById('lower-10db-c').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-10db-c').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
       document.getElementById('main-lobe-10db-c').innerHTML = `Main Lobe: ${miles_mainlobe} ft`;
@@ -1854,6 +1902,9 @@
 
       var horizon = Math.sqrt(2 * H).toFixed(3);
       console.log(horizon);
+
+      var line = document.getElementById('line-f-3');
+      line.style.display = 'block';
 
       document.getElementById('lower-10db-f').innerHTML = `Lower 10dB point: ${miles_lowerdb} ft`;
       document.getElementById('upper-10db-f').innerHTML = `Upper 10dB point: ${miles_upperdb} ft`;
